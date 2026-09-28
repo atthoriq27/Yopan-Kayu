@@ -645,15 +645,21 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
         password: cleanPassword
       });
       if (error) {
-        return { success: false, error: 'Email atau kata sandi tidak valid.' };
+        if (error.message.toLowerCase().includes('email not confirmed')) {
+          return {
+            success: false,
+            error: 'Email belum dikonfirmasi. Silakan buka Supabase > Authentication > Users, klik tanda titik tiga di baris user, lalu klik "Confirm user".'
+          };
+        }
+        return { success: false, error: 'Email atau kata sandi salah.' };
       }
       return { success: true };
     } catch (err: any) {
-      return { success: false, error: 'Email atau kata sandi tidak valid.' };
+      return { success: false, error: 'Terjadi gangguan koneksi ke Supabase.' };
     }
   }
 
-  // Local development fallback (only active when Supabase env vars are not set)
+  // Local development fallback (only active when Supabase env vars are not set in .env)
   if (cleanEmail === 'admin@yopankayu.com' && cleanPassword === 'admin123') {
     setLocal(STORAGE_KEYS.AUTH, { isLoggedIn: true, email: cleanEmail });
     return { success: true };
@@ -661,7 +667,7 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
 
   return {
     success: false,
-    error: 'Email atau kata sandi tidak valid.'
+    error: 'Database Supabase belum terhubung di file .env lokal Anda. Masukkan VITE_SUPABASE_URL di .env terlebih dahulu.'
   };
 }
 
