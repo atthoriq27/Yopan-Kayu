@@ -169,9 +169,19 @@ export async function saveCategory(category: Partial<Category>): Promise<Categor
         .select()
         .single();
       if (error) throw error;
+
+      const list = getLocal<Category[]>(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+      const index = list.findIndex(c => c.id === record.id);
+      if (index >= 0) {
+        list[index] = { ...list[index], ...record };
+      } else {
+        list.push(record);
+      }
+      setLocal(STORAGE_KEYS.CATEGORIES, list);
       return data;
-    } catch (err) {
-      console.warn('Supabase saveCategory failed, updating local store:', err);
+    } catch (err: any) {
+      console.error('Supabase saveCategory failed:', err);
+      throw new Error(`Gagal menyimpan kategori ke server: ${err.message || err}`);
     }
   }
 
@@ -191,9 +201,13 @@ export async function deleteCategory(id: string): Promise<boolean> {
     try {
       const { error } = await supabase.from('categories').delete().eq('id', id);
       if (error) throw error;
+      const list = getLocal<Category[]>(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+      const filtered = list.filter(c => c.id !== id);
+      setLocal(STORAGE_KEYS.CATEGORIES, filtered);
       return true;
-    } catch (err) {
-      console.warn('Supabase deleteCategory failed:', err);
+    } catch (err: any) {
+      console.error('Supabase deleteCategory failed:', err);
+      throw new Error(`Gagal menghapus kategori dari server: ${err.message || err}`);
     }
   }
   const list = getLocal<Category[]>(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
@@ -378,13 +392,34 @@ export async function saveProduct(
         await supabase.from('product_images').insert(imagesToInsert);
       }
 
+      // Update local cache
+      const list = getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
+      const images = (additionalImages || []).map((imgUrl, i) => ({
+        id: `img-${id}-${i}`,
+        product_id: id,
+        image_url: imgUrl,
+        sort_order: i + 1
+      }));
+      const fullRecord: Product = {
+        ...record,
+        images: images.length > 0 ? images : (record.images || [])
+      };
+      const idx = list.findIndex(p => p.id === id);
+      if (idx >= 0) {
+        list[idx] = { ...list[idx], ...fullRecord };
+      } else {
+        list.unshift(fullRecord);
+      }
+      setLocal(STORAGE_KEYS.PRODUCTS, list);
+
       return data;
-    } catch (err) {
-      console.warn('Supabase saveProduct failed, updating local store:', err);
+    } catch (err: any) {
+      console.error('Supabase saveProduct failed:', err);
+      throw new Error(`Gagal menyimpan produk ke server: ${err.message || err}`);
     }
   }
 
-  // Local fallback
+  // Local fallback (only for local development when Supabase is not configured)
   const list = getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
   const images = (additionalImages || []).map((imgUrl, i) => ({
     id: `img-${id}-${i}`,
@@ -414,9 +449,13 @@ export async function deleteProduct(id: string): Promise<boolean> {
       await supabase.from('product_images').delete().eq('product_id', id);
       const { error } = await supabase.from('products').delete().eq('id', id);
       if (error) throw error;
+      const list = getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
+      const filtered = list.filter(p => p.id !== id);
+      setLocal(STORAGE_KEYS.PRODUCTS, filtered);
       return true;
-    } catch (err) {
-      console.warn('Supabase deleteProduct failed:', err);
+    } catch (err: any) {
+      console.error('Supabase deleteProduct failed:', err);
+      throw new Error(`Gagal menghapus produk dari server: ${err.message || err}`);
     }
   }
   const list = getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
@@ -476,9 +515,19 @@ export async function saveGalleryItem(item: Partial<GalleryItem>): Promise<Galle
         .select()
         .single();
       if (error) throw error;
+
+      const list = getLocal<GalleryItem[]>(STORAGE_KEYS.GALLERY, INITIAL_GALLERY);
+      const idx = list.findIndex(g => g.id === id);
+      if (idx >= 0) {
+        list[idx] = { ...list[idx], ...record };
+      } else {
+        list.unshift(record);
+      }
+      setLocal(STORAGE_KEYS.GALLERY, list);
       return data;
-    } catch (err) {
-      console.warn('Supabase saveGalleryItem failed:', err);
+    } catch (err: any) {
+      console.error('Supabase saveGalleryItem failed:', err);
+      throw new Error(`Gagal menyimpan portofolio ke server: ${err.message || err}`);
     }
   }
 
@@ -498,9 +547,13 @@ export async function deleteGalleryItem(id: string): Promise<boolean> {
     try {
       const { error } = await supabase.from('gallery').delete().eq('id', id);
       if (error) throw error;
+      const list = getLocal<GalleryItem[]>(STORAGE_KEYS.GALLERY, INITIAL_GALLERY);
+      const filtered = list.filter(g => g.id !== id);
+      setLocal(STORAGE_KEYS.GALLERY, filtered);
       return true;
-    } catch (err) {
-      console.warn('Supabase deleteGalleryItem failed:', err);
+    } catch (err: any) {
+      console.error('Supabase deleteGalleryItem failed:', err);
+      throw new Error(`Gagal menghapus portofolio dari server: ${err.message || err}`);
     }
   }
   const list = getLocal<GalleryItem[]>(STORAGE_KEYS.GALLERY, INITIAL_GALLERY);
@@ -548,8 +601,9 @@ export async function updateBusinessProfile(profile: Partial<BusinessProfile>): 
       if (data) {
         finalResult = data;
       }
-    } catch (err) {
-      console.warn('Supabase updateBusinessProfile failed:', err);
+    } catch (err: any) {
+      console.error('Supabase updateBusinessProfile failed:', err);
+      throw new Error(`Gagal menyimpan profil usaha ke server: ${err.message || err}`);
     }
   }
 
@@ -593,8 +647,9 @@ export async function uploadImage(file: File, bucket: 'products' | 'gallery' | '
 
       const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
       return data.publicUrl;
-    } catch (err) {
-      console.warn('Supabase storage upload failed, fallback to compressed data URL:', err);
+    } catch (err: any) {
+      console.error('Supabase storage upload failed:', err);
+      throw new Error(`Gagal mengunggah foto ke penyimpanan cloud: ${err.message || err}. Pastikan SQL schema telah dijalankan di Supabase.`);
     }
   }
 
