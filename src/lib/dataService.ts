@@ -661,7 +661,7 @@ export async function getAdminSession() {
   if (isSupabaseConfigured && supabase) {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
+      if (session && session.user) {
         return {
           user: session.user,
           isLoggedIn: true,
@@ -671,6 +671,8 @@ export async function getAdminSession() {
     } catch (e) {
       console.warn('Supabase auth session check failed:', e);
     }
+    // When Supabase is configured, do NOT allow mock/demo auth fallback
+    return { user: null, isLoggedIn: false, email: '' };
   }
 
   const demoAuth = getLocal<{ isLoggedIn: boolean; email: string } | null>(STORAGE_KEYS.AUTH, null);
