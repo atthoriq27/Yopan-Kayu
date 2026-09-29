@@ -85,6 +85,24 @@ ON public.categories FOR SELECT
 TO anon, authenticated 
 USING (true);
 
+DROP POLICY IF EXISTS "Anon cannot insert categories" ON public.categories;
+CREATE POLICY "Anon cannot insert categories"
+ON public.categories FOR INSERT
+TO anon
+WITH CHECK (false);
+
+DROP POLICY IF EXISTS "Anon cannot update categories" ON public.categories;
+CREATE POLICY "Anon cannot update categories"
+ON public.categories FOR UPDATE
+TO anon
+USING (false);
+
+DROP POLICY IF EXISTS "Anon cannot delete categories" ON public.categories;
+CREATE POLICY "Anon cannot delete categories"
+ON public.categories FOR DELETE
+TO anon
+USING (false);
+
 DROP POLICY IF EXISTS "Admin can manage categories" ON public.categories;
 CREATE POLICY "Admin can manage categories" 
 ON public.categories FOR ALL 
@@ -98,6 +116,24 @@ CREATE POLICY "Public can view active products"
 ON public.products FOR SELECT 
 TO anon 
 USING (is_active = true);
+
+DROP POLICY IF EXISTS "Anon cannot insert products" ON public.products;
+CREATE POLICY "Anon cannot insert products"
+ON public.products FOR INSERT
+TO anon
+WITH CHECK (false);
+
+DROP POLICY IF EXISTS "Anon cannot update products" ON public.products;
+CREATE POLICY "Anon cannot update products"
+ON public.products FOR UPDATE
+TO anon
+USING (false);
+
+DROP POLICY IF EXISTS "Anon cannot delete products" ON public.products;
+CREATE POLICY "Anon cannot delete products"
+ON public.products FOR DELETE
+TO anon
+USING (false);
 
 DROP POLICY IF EXISTS "Admin can view all products" ON public.products;
 CREATE POLICY "Admin can view all products" 
@@ -119,6 +155,24 @@ ON public.product_images FOR SELECT
 TO anon, authenticated 
 USING (true);
 
+DROP POLICY IF EXISTS "Anon cannot insert product images" ON public.product_images;
+CREATE POLICY "Anon cannot insert product images"
+ON public.product_images FOR INSERT
+TO anon
+WITH CHECK (false);
+
+DROP POLICY IF EXISTS "Anon cannot update product images" ON public.product_images;
+CREATE POLICY "Anon cannot update product images"
+ON public.product_images FOR UPDATE
+TO anon
+USING (false);
+
+DROP POLICY IF EXISTS "Anon cannot delete product images" ON public.product_images;
+CREATE POLICY "Anon cannot delete product images"
+ON public.product_images FOR DELETE
+TO anon
+USING (false);
+
 DROP POLICY IF EXISTS "Admin can manage product images" ON public.product_images;
 CREATE POLICY "Admin can manage product images" 
 ON public.product_images FOR ALL 
@@ -133,6 +187,24 @@ ON public.gallery FOR SELECT
 TO anon, authenticated 
 USING (true);
 
+DROP POLICY IF EXISTS "Anon cannot insert gallery" ON public.gallery;
+CREATE POLICY "Anon cannot insert gallery"
+ON public.gallery FOR INSERT
+TO anon
+WITH CHECK (false);
+
+DROP POLICY IF EXISTS "Anon cannot update gallery" ON public.gallery;
+CREATE POLICY "Anon cannot update gallery"
+ON public.gallery FOR UPDATE
+TO anon
+USING (false);
+
+DROP POLICY IF EXISTS "Anon cannot delete gallery" ON public.gallery;
+CREATE POLICY "Anon cannot delete gallery"
+ON public.gallery FOR DELETE
+TO anon
+USING (false);
+
 DROP POLICY IF EXISTS "Admin can manage gallery" ON public.gallery;
 CREATE POLICY "Admin can manage gallery" 
 ON public.gallery FOR ALL 
@@ -146,6 +218,24 @@ CREATE POLICY "Public can view business profile"
 ON public.business_profile FOR SELECT 
 TO anon, authenticated 
 USING (true);
+
+DROP POLICY IF EXISTS "Anon cannot insert business profile" ON public.business_profile;
+CREATE POLICY "Anon cannot insert business profile"
+ON public.business_profile FOR INSERT
+TO anon
+WITH CHECK (false);
+
+DROP POLICY IF EXISTS "Anon cannot update business profile" ON public.business_profile;
+CREATE POLICY "Anon cannot update business profile"
+ON public.business_profile FOR UPDATE
+TO anon
+USING (false);
+
+DROP POLICY IF EXISTS "Anon cannot delete business profile" ON public.business_profile;
+CREATE POLICY "Anon cannot delete business profile"
+ON public.business_profile FOR DELETE
+TO anon
+USING (false);
 
 DROP POLICY IF EXISTS "Admin can update business profile" ON public.business_profile;
 CREATE POLICY "Admin can update business profile" 
