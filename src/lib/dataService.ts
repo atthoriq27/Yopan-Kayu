@@ -616,6 +616,25 @@ export async function updateBusinessProfile(profile: Partial<BusinessProfile>): 
   return finalResult;
 }
 
+// Helper to synchronously convert Data URL to Blob without triggering CSP connect-src network checks
+function dataUrlToBlob(dataUrl: string): Blob {
+  try {
+    const parts = dataUrl.split(',');
+    if (parts.length < 2) return new Blob([], { type: 'image/jpeg' });
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+    const binary = atob(parts[1]);
+    const array = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      array[i] = binary.charCodeAt(i);
+    }
+    return new Blob([array], { type: mime });
+  } catch (err) {
+    console.warn('Failed to parse data URL to blob:', err);
+    return new Blob([], { type: 'image/jpeg' });
+  }
+}
+
 // ---------------- STORAGE / IMAGE UPLOAD ----------------
 export async function uploadImage(file: File, bucket: 'products' | 'gallery' | 'business' = 'products'): Promise<string> {
   const isLogo = bucket === 'business';
@@ -623,8 +642,13 @@ export async function uploadImage(file: File, bucket: 'products' | 'gallery' | '
   const maxHeight = isLogo ? 400 : 1000;
   const quality = isLogo ? 0.9 : 0.82;
 
-  // Compress image client-side first to minimize data size and stay well within localStorage limits
-  const compressedDataUrl = await compressImageFile(file, maxWidth, maxHeight, quality);
+  // Compress image client-side first to optimize payload size
+  let compressedDataUrl = '';
+  try {
+    compressedDataUrl = await compressImageFile(file, maxWidth, maxHeight, quality);
+  } catch (compErr) {
+    console.warn('Client-side compression warning, falling back to original file:', compErr);
+  }
 
   if (isSupabaseConfigured && supabase) {
     try {
@@ -632,15 +656,21 @@ export async function uploadImage(file: File, bucket: 'products' | 'gallery' | '
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      const res = await fetch(compressedDataUrl);
-      const blob = await res.blob();
+      // Convert compressed data URL to Blob directly without network fetch (immune to CSP connect-src)
+      let uploadBlob: Blob = file;
+      if (compressedDataUrl && compressedDataUrl.startsWith('data:')) {
+        const parsed = dataUrlToBlob(compressedDataUrl);
+        if (parsed.size > 0) {
+          uploadBlob = parsed;
+        }
+      }
 
       const { error: uploadError } = await supabase.storage
         .from(bucket)
-        .upload(filePath, blob, {
+        .upload(filePath, uploadBlob, {
           cacheControl: '3600',
           upsert: true,
-          contentType: blob.type || 'image/jpeg'
+          contentType: uploadBlob.type || file.type || 'image/jpeg'
         });
 
       if (uploadError) throw uploadError;
@@ -649,11 +679,21 @@ export async function uploadImage(file: File, bucket: 'products' | 'gallery' | '
       return data.publicUrl;
     } catch (err: any) {
       console.error('Supabase storage upload failed:', err);
-      throw new Error(`Gagal mengunggah foto ke penyimpanan cloud: ${err.message || err}. Pastikan SQL schema telah dijalankan di Supabase.`);
+      const detail = err?.message || err?.error_description || (typeof err === 'string' ? err : 'Koneksi ke storage Supabase terputus');
+      throw new Error(`Gagal mengunggah foto ke storage (${detail}). Pastikan bucket "${bucket}" sudah dibuat di menu Storage Supabase.`);
     }
   }
 
-  return compressedDataUrl;
+  if (compressedDataUrl) {
+    return compressedDataUrl;
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 // ---------------- AUTHENTICATION ----------------

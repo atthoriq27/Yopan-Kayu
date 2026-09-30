@@ -61,8 +61,8 @@ export const AdminGallery: React.FC = () => {
     try {
       const url = await uploadImage(file, 'gallery');
       setImageUrl(url);
-    } catch (err) {
-      alert('Gagal mengunggah foto.');
+    } catch (err: any) {
+      alert(err?.message || 'Gagal mengunggah foto.');
     } finally {
       setUploading(false);
       if (e.target) e.target.value = '';

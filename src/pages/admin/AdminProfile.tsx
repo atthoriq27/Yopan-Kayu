@@ -57,8 +57,8 @@ export const AdminProfile: React.FC = () => {
       const url = await uploadImage(file, 'business');
       setLogoUrl(url);
       setUploadNote('✓ Logo baru berhasil dioptimasi. Klik "Perbarui Profil Usaha" di bawah untuk menerapkan.');
-    } catch (err) {
-      alert('Gagal mengunggah logo.');
+    } catch (err: any) {
+      alert(err?.message || 'Gagal mengunggah logo.');
     } finally {
       setUploadingLogo(false);
       if (e.target) e.target.value = '';

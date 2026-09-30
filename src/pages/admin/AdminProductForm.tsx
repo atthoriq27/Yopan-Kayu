@@ -81,8 +81,8 @@ export const AdminProductForm: React.FC = () => {
     try {
       const url = await uploadImage(file, 'products');
       setImageUrl(url);
-    } catch (err) {
-      alert('Gagal mengunggah foto.');
+    } catch (err: any) {
+      alert(err?.message || 'Gagal mengunggah foto.');
     } finally {
       setUploadingImage(false);
       if (e.target) e.target.value = '';
@@ -96,8 +96,8 @@ export const AdminProductForm: React.FC = () => {
     try {
       const url = await uploadImage(file, 'products');
       setAdditionalImages((prev) => [...prev, url]);
-    } catch (err) {
-      alert('Gagal mengunggah foto tambahan.');
+    } catch (err: any) {
+      alert(err?.message || 'Gagal mengunggah foto tambahan.');
     } finally {
       setUploadingImage(false);
       if (e.target) e.target.value = '';
