@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getBusinessProfile, getWhatsAppUrl } from '../lib/dataService';
+import { getBusinessProfile, getWhatsAppUrl, PROFILE_UPDATED_EVENT } from '../lib/dataService';
 import { BusinessProfile } from '../types';
 import { WhatsAppIcon } from './icons/WhatsAppIcon';
 
@@ -28,11 +28,22 @@ export const WhatsAppFloat: React.FC = () => {
 
   useEffect(() => {
     getBusinessProfile().then(setProfile);
+
+    const handleProfileUpdate = (e: any) => {
+      if (e.detail) {
+        setProfile(e.detail);
+      }
+    };
+
+    window.addEventListener(PROFILE_UPDATED_EVENT, handleProfileUpdate);
+    return () => {
+      window.removeEventListener(PROFILE_UPDATED_EVENT, handleProfileUpdate);
+    };
   }, []);
 
   // Update clamp on resize or initial load
   const clampPosition = useCallback((x: number, y: number) => {
-    const btnSize = 52;
+    const btnSize = 56;
     const padding = 12;
     const maxX = window.innerWidth - btnSize - padding;
     const maxY = window.innerHeight - btnSize - padding;
@@ -56,14 +67,16 @@ export const WhatsAppFloat: React.FC = () => {
       initialY: rect.top,
       hasMoved: false,
     };
-    setIsDragging(true);
+    // Note: Do NOT set isDragging(true) here! Only set it when actual movement exceeds threshold.
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const dx = moveEvent.clientX - dragRef.current.startX;
       const dy = moveEvent.clientY - dragRef.current.startY;
 
-      if (!dragRef.current.hasMoved && Math.hypot(dx, dy) > 5) {
+      // Only trigger dragging if moved more than 8 pixels
+      if (!dragRef.current.hasMoved && Math.hypot(dx, dy) > 8) {
         dragRef.current.hasMoved = true;
+        setIsDragging(true);
       }
 
       if (dragRef.current.hasMoved) {
@@ -74,9 +87,11 @@ export const WhatsAppFloat: React.FC = () => {
     };
 
     const handleMouseUp = () => {
-      setIsDragging(false);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      setTimeout(() => {
+        setIsDragging(false);
+      }, 50);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -97,7 +112,7 @@ export const WhatsAppFloat: React.FC = () => {
       initialY: rect.top,
       hasMoved: false,
     };
-    setIsDragging(true);
+    // Note: Do NOT set isDragging(true) here!
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -105,12 +120,12 @@ export const WhatsAppFloat: React.FC = () => {
     const dx = touch.clientX - dragRef.current.startX;
     const dy = touch.clientY - dragRef.current.startY;
 
-    if (!dragRef.current.hasMoved && Math.hypot(dx, dy) > 6) {
+    if (!dragRef.current.hasMoved && Math.hypot(dx, dy) > 10) {
       dragRef.current.hasMoved = true;
+      setIsDragging(true);
     }
 
     if (dragRef.current.hasMoved) {
-      // Prevent browser pull-to-refresh while dragging button
       if (e.cancelable) e.preventDefault();
       const nextX = dragRef.current.initialX + dx;
       const nextY = dragRef.current.initialY + dy;
@@ -119,16 +134,20 @@ export const WhatsAppFloat: React.FC = () => {
   };
 
   const handleTouchEnd = () => {
-    setIsDragging(false);
+    setTimeout(() => {
+      setIsDragging(false);
+    }, 50);
   };
 
-  // Click handler: only open WA if not dragged
-  const handleClick = (e: React.MouseEvent) => {
+  // Click handler: only prevent following link if user deliberately dragged the button
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (dragRef.current.hasMoved) {
       e.preventDefault();
       e.stopPropagation();
+      dragRef.current.hasMoved = false;
       return;
     }
+    // Normal click cleanly executes the link navigation
   };
 
   if (location.pathname.startsWith('/kelola') || location.pathname.startsWith('/admin')) {
@@ -146,13 +165,15 @@ export const WhatsAppFloat: React.FC = () => {
         position: 'fixed',
         left: `${position.x}px`,
         top: `${position.y}px`,
-        touchAction: 'none',
+        zIndex: 60,
+        touchAction: isDragging ? 'none' : 'manipulation',
       }
     : {
         position: 'fixed',
-        bottom: '76px', // Clears mobile bottom navigation bar nicely
+        bottom: '80px', // Comfortably clears mobile bottom navigation bar (z-50)
         right: '16px',
-        touchAction: 'none',
+        zIndex: 60,
+        touchAction: isDragging ? 'none' : 'manipulation',
       };
 
   return (
@@ -160,7 +181,7 @@ export const WhatsAppFloat: React.FC = () => {
       ref={buttonRef}
       aria-label="Konsultasi Cepat"
       style={style}
-      className={`z-40 select-none ${isDragging ? 'cursor-grabbing scale-105' : 'cursor-grab'}`}
+      className={`select-none ${isDragging ? 'cursor-grabbing scale-105' : 'cursor-grab'}`}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -173,22 +194,20 @@ export const WhatsAppFloat: React.FC = () => {
           rel="noopener noreferrer"
           onClick={handleClick}
           aria-label="Konsultasi WhatsApp (Bisa digeser/dipindah)"
-          className={`flex items-center justify-center w-12 h-12 rounded-full bg-[#006c47] hover:bg-[#085a3c] text-white shadow-[0_6px_20px_rgba(0,108,71,0.35)] transition-all duration-200 border-2 border-white/80 active:scale-95 ${
-            isDragging ? 'pointer-events-none' : ''
-          }`}
-          title="Geser untuk memindahkan posisi tombol"
+          className="flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#006c47] hover:bg-[#085a3c] text-white shadow-[0_6px_20px_rgba(0,108,71,0.4)] hover:shadow-[0_8px_28px_rgba(0,108,71,0.55)] transition-all duration-200 border-2 border-white active:scale-95 cursor-pointer"
+          title="Klik untuk chat WhatsApp (bisa digeser jika menutupi konten)"
         >
-          <WhatsAppIcon className="w-6 h-6 fill-white" />
+          <WhatsAppIcon className="w-7 h-7 fill-white" />
 
           {/* Active online pulse dot */}
-          <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3 pointer-events-none">
+          <span className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5 pointer-events-none">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#92f7c2] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-full w-full bg-[#92f7c2]"></span>
+            <span className="relative inline-flex rounded-full h-full w-full bg-[#92f7c2] border border-white"></span>
           </span>
         </a>
 
         {/* Desktop Elegant Hover Tooltip */}
-        <div className="hidden md:flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="hidden md:flex absolute right-full mr-3 top-1/2 -translate-y-1/2 items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <div className="bg-[#1c1c19]/90 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg shadow-md whitespace-nowrap backdrop-blur-xs flex items-center gap-1.5">
             <span>Konsultasi WA</span>
             <span className="text-[9px] text-[#e8dfd5]/60">• Geser bebas</span>
