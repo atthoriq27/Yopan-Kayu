@@ -158,7 +158,7 @@ export const Home: React.FC = () => {
 
             {/* Subheadline Copy */}
             <p className="text-xs sm:text-base text-[#52443b] leading-relaxed max-w-xl font-normal">
-              Dibuat langsung oleh pengrajin bengkel Tigaraksa dari kayu solid pilihan (Jati, Trembesi, Sungkai, dan Mahoni). Anda bisa memesan model serta ukuran khusus yang pas dengan ruangan rumah Anda.
+              Dibuat langsung oleh pengrajin di workshop kami di Tigaraksa dari kayu solid pilihan (Jati, Trembesi, Sungkai, dan Mahoni). Kami siap melayani pesanan model serta ukuran khusus yang pas dengan ruangan rumah Anda.
             </p>
 
             {/* Refined Action CTAs */}
@@ -511,7 +511,7 @@ export const Home: React.FC = () => {
               Investasi Perabot yang Bernilai Abadi
             </h2>
             <p className="text-xs sm:text-sm text-[#52443b] leading-relaxed">
-              Mengapa perabot kayu solid Yopan Kayu tetap kokoh dan indah saat mebel pabrikan serbuk mulai rapuh dalam 2-3 tahun?
+              Mengapa perabot kayu solid buatan kami tetap kokoh dan indah saat mebel pabrikan serbuk mulai rapuh dalam 2-3 tahun?
             </p>
           </div>
 
@@ -695,14 +695,18 @@ export const Home: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-[#ece6dc] flex-shrink-0 border border-[#ede5d8]">
                     <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe0pN2zKVEc3QUClmDoxqxceKE8cniJa-8CManzl-wjm19aE1cLRV-s8ehpMbQxVtqe3WQ3y6m1OqRYATluIaOkT7t3g4NxoWh44Y95JCguiKVBjOStmFRewmmgApdEnwc8jszsUieQqKa76Om_JdxWG1XVoEV7owvs6HE9DAuz06qkHSmdztZ2kT1A2Sgo0lCrDHKk9_3eGkTmIt2Ma6eiLpyGWePH2PXkbD6UEYw8E6PRzTQ1bUR0w"
-                      alt="Pak Heri - Owner Yopan Kayu"
+                      src={profile?.about_image_url || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBe0pN2zKVEc3QUClmDoxqxceKE8cniJa-8CManzl-wjm19aE1cLRV-s8ehpMbQxVtqe3WQ3y6m1OqRYATluIaOkT7t3g4NxoWh44Y95JCguiKVBjOStmFRewmmgApdEnwc8jszsUieQqKa76Om_JdxWG1XVoEV7owvs6HE9DAuz06qkHSmdztZ2kT1A2Sgo0lCrDHKk9_3eGkTmIt2Ma6eiLpyGWePH2PXkbD6UEYw8E6PRzTQ1bUR0w'}
+                      alt={profile?.about_badge_text || 'Pak Heri - Owner'}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-serif text-xs sm:text-sm font-bold text-[#1c1c19]">Pak Heri</span>
-                    <span className="text-[10px] sm:text-[11px] text-[#8c6b4f] font-semibold uppercase tracking-wider">Owner</span>
+                    <span className="font-serif text-xs sm:text-sm font-bold text-[#1c1c19]">
+                      {(profile?.about_badge_text || 'Pak Heri • Owner').split('•')[0]?.trim() || 'Pak Heri'}
+                    </span>
+                    <span className="text-[10px] sm:text-[11px] text-[#8c6b4f] font-semibold uppercase tracking-wider">
+                      {(profile?.about_badge_text || 'Pak Heri • Owner').split('•')[1]?.trim() || 'Owner'}
+                    </span>
                   </div>
                 </div>
 
@@ -773,15 +777,15 @@ export const Home: React.FC = () => {
                   <span className="material-symbols-outlined text-[20px] text-[#8c6b4f]/60 group-hover:text-[#6f3c16] transition-colors">handyman</span>
                 </div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-[#1c1c19]">
-                  Proses Pembuatan di Bengkel
+                  Proses Pembuatan di Workshop Kami
                 </h3>
                 <p className="text-xs text-[#52443b] leading-relaxed">
-                  Dikerjakan dengan teliti oleh pengrajin berpengalaman di workshop Tigaraksa dengan sambungan rapi dan amplasan halus.
+                  Dikerjakan dengan teliti oleh tim pengrajin kami di workshop Tigaraksa dengan sambungan rapi dan amplasan halus.
                 </p>
               </div>
               <div className="flex items-center gap-1.5 pt-2 border-t border-[#f0ede9] text-[11px] font-semibold text-[#6f3c16]">
                 <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                <span>Dibuat teliti di bengkel sendiri</span>
+                <span>Dibuat teliti di workshop kami sendiri</span>
               </div>
             </div>
 

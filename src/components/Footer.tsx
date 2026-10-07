@@ -57,7 +57,7 @@ export const Footer: React.FC = () => {
                   {profile?.business_name || 'Yopan Kayu'}
                 </span>
                 <span className="text-[10px] text-[#6f3c16] uppercase tracking-[0.14em] font-bold">
-                  Bengkel Kriya Kayu Solid
+                  Workshop Kriya Kayu Solid
                 </span>
               </div>
             </Link>
@@ -187,7 +187,7 @@ export const Footer: React.FC = () => {
           <p>© {new Date().getFullYear()} Yopan Kayu. Seluruh hak cipta dilindungi.</p>
           <div className="flex items-center gap-1.5 text-[11px]">
             <span className="material-symbols-outlined text-[13px] text-[#6f3c16]">location_on</span>
-            <span>Bengkel Tigaraksa, Kab. Tangerang</span>
+            <span>Workshop Tigaraksa, Kab. Tangerang</span>
           </div>
         </div>
 

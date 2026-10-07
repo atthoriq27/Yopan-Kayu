@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getBusinessProfile, getWhatsAppUrl } from '../lib/dataService';
 import { BusinessProfile } from '../types';
+import {
+  DEFAULT_ABOUT_IMAGE,
+  DEFAULT_ABOUT_BADGE,
+  DEFAULT_ABOUT_TITLE,
+  DEFAULT_ABOUT_STORY
+} from '../lib/constants';
 import { WhatsAppIcon } from '../components/icons/WhatsAppIcon';
 
 export const About: React.FC = () => {
@@ -16,6 +22,12 @@ export const About: React.FC = () => {
     'Halo Pak Heri, saya membaca profil usaha Yopan Kayu dan ingin berdiskusi mengenai proyek kriya mebel.'
   );
 
+  const storyText = profile?.about_story || DEFAULT_ABOUT_STORY;
+  const storyParagraphs = storyText
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col gap-12 pb-24 md:pb-12">
       
@@ -23,13 +35,13 @@ export const About: React.FC = () => {
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <span className="h-4 w-1 bg-[#6f3c16] rounded-full"></span>
-          <span className="text-xs uppercase tracking-wider text-[#6f3c16] font-bold">Profil Bengkel</span>
+          <span className="text-xs uppercase tracking-wider text-[#6f3c16] font-bold">Tentang Kami</span>
         </div>
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1c1c19]">
           Tentang Yopan Kayu
         </h1>
         <p className="text-xs sm:text-sm text-[#52443b] max-w-2xl leading-relaxed">
-          Usaha pembuatan dan penyediaan produk mebel berbahan kayu dengan mengutamakan kualitas, kerapian, dan hasil pengerjaan yang sesuai kebutuhan Anda.
+          Workshop kriya mebel berbahan kayu solid nusantara dengan dedikasi pada mutu bahan baku, kerapian sambungan, dan kepuasan Anda.
         </p>
       </div>
 
@@ -38,13 +50,18 @@ export const About: React.FC = () => {
         <div className="lg:col-span-5 relative">
           <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#ece6dc] shadow-inner">
             <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe0pN2zKVEc3QUClmDoxqxceKE8cniJa-8CManzl-wjm19aE1cLRV-s8ehpMbQxVtqe3WQ3y6m1OqRYATluIaOkT7t3g4NxoWh44Y95JCguiKVBjOStmFRewmmgApdEnwc8jszsUieQqKa76Om_JdxWG1XVoEV7owvs6HE9DAuz06qkHSmdztZ2kT1A2Sgo0lCrDHKk9_3eGkTmIt2Ma6eiLpyGWePH2PXkbD6UEYw8E6PRzTQ1bUR0w"
-              alt="Pak Suheri (Pak Heri) - Pengrajin dan Pemilik Yopan Kayu"
+              src={profile?.about_image_url || DEFAULT_ABOUT_IMAGE}
+              alt={profile?.about_badge_text || 'Pak Suheri (Pak Heri) - Pengrajin dan Pemilik Yopan Kayu'}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = DEFAULT_ABOUT_IMAGE;
+              }}
             />
-            <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-2">
+            <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-2 border border-black/5 max-w-[90%]">
               <span className="material-symbols-outlined text-[#6f3c16] text-[18px]">handyman</span>
-              <span className="text-xs font-bold text-[#1c1c19]">Pak Heri • Owner</span>
+              <span className="text-xs font-bold text-[#1c1c19] truncate">
+                {profile?.about_badge_text || DEFAULT_ABOUT_BADGE}
+              </span>
             </div>
           </div>
         </div>
@@ -55,20 +72,14 @@ export const About: React.FC = () => {
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1c1c19] leading-tight">
-            Pembuatan dan Penyediaan Produk Mebel Berkualitas
+            {profile?.about_title || DEFAULT_ABOUT_TITLE}
           </h2>
 
-          <p className="text-sm text-[#52443b] leading-relaxed">
-            Yopan Kayu merupakan usaha bengkel mebel kayu solid yang dikelola langsung oleh Pak Suheri (akrab disapa Pak Heri) di Tigaraksa. Nama Yopan Kayu sendiri diambil dengan rasa bangga dari nama putra tercinta beliau, mencerminkan ketulusan dalam berkarya untuk menghasilkan perabot berkualitas tinggi bagi setiap keluarga.
-          </p>
-
-          <p className="text-sm text-[#52443b] leading-relaxed">
-            Dengan pengalaman bertahun-tahun dalam mengolah kayu solid pilihan, Pak Heri selalu mengutamakan kerapian sambungan, kehalusan amplas, serta kenyamanan ergonomis setiap perabot. Kami siap membantu Anda berdiskusi santai mulai dari pemilihan jenis kayu (Jati, Trembesi, Sungkai, Mahoni) hingga warna finishing yang serasi dengan ruangan Anda.
-          </p>
-
-          <p className="text-sm text-[#52443b] leading-relaxed">
-            Melalui hadirnya Yopan Kayu secara digital, kami ingin memudahkan pelanggan dalam mengenal produk, melihat katalog, dan menghubungi kami untuk mendapatkan informasi lebih lanjut maupun melakukan pemesanan.
-          </p>
+          {storyParagraphs.map((paragraph, idx) => (
+            <p key={idx} className="text-sm text-[#52443b] leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
 
           <div className="p-4 rounded-2xl bg-[#f0ede9] border border-[#ede5d8] flex items-start gap-3 mt-1">
             <span className="material-symbols-outlined text-[#6f3c16] text-[24px] mt-0.5 flex-shrink-0">
@@ -146,7 +157,7 @@ export const About: React.FC = () => {
             Ingin Berdiskusi Mengenai Kebutuhan Hunian Anda?
           </h3>
           <p className="text-xs sm:text-sm text-[#52443b]">
-            Pak Heri siap berdiskusi langsung menentukan jenis kayu dan perkiraan rancangan anggaran.
+            Kami siap berdiskusi langsung bersama Anda menentukan pilihan jenis kayu dan perkiraan rancangan anggaran yang pas.
           </p>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0 w-full sm:w-auto justify-center sm:justify-end">

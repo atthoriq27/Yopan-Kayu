@@ -12,8 +12,8 @@ export const MobileBottomNav: React.FC = () => {
   const items = [
     { label: 'Beranda', path: '/', icon: 'cottage' },
     { label: 'Produk', path: '/produk', icon: 'inventory_2' },
-    { label: 'Galeri', path: '/galeri', icon: 'photo_camera' },
-    { label: 'Profil', path: '/tentang', icon: 'history_edu' },
+    { label: 'Portofolio', path: '/galeri', icon: 'photo_camera' },
+    { label: 'Tentang Kami', path: '/tentang', icon: 'history_edu' },
     { label: 'Kontak', path: '/kontak', icon: 'chat_paste_go' },
   ];
 

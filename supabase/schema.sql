@@ -65,8 +65,18 @@ CREATE TABLE IF NOT EXISTS public.business_profile (
     email VARCHAR(100),
     logo_url TEXT,
     opening_hours VARCHAR(255),
+    about_image_url TEXT,
+    about_badge_text VARCHAR(100) DEFAULT 'Pak Heri • Owner',
+    about_title VARCHAR(255) DEFAULT 'Pembuatan dan Penyediaan Produk Mebel Berkualitas',
+    about_story TEXT,
     updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Ensure columns exist if table was already created
+ALTER TABLE public.business_profile ADD COLUMN IF NOT EXISTS about_image_url TEXT;
+ALTER TABLE public.business_profile ADD COLUMN IF NOT EXISTS about_badge_text VARCHAR(100) DEFAULT 'Pak Heri • Owner';
+ALTER TABLE public.business_profile ADD COLUMN IF NOT EXISTS about_title VARCHAR(255) DEFAULT 'Pembuatan dan Penyediaan Produk Mebel Berkualitas';
+ALTER TABLE public.business_profile ADD COLUMN IF NOT EXISTS about_story TEXT;
 
 -- ===================================================
 -- ROW LEVEL SECURITY (RLS)

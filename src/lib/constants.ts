@@ -1,10 +1,21 @@
 import { Category, Product, GalleryItem, BusinessProfile } from '../types';
 
+export const DEFAULT_ABOUT_IMAGE =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuBe0pN2zKVEc3QUClmDoxqxceKE8cniJa-8CManzl-wjm19aE1cLRV-s8ehpMbQxVtqe3WQ3y6m1OqRYATluIaOkT7t3g4NxoWh44Y95JCguiKVBjOStmFRewmmgApdEnwc8jszsUieQqKa76Om_JdxWG1XVoEV7owvs6HE9DAuz06qkHSmdztZ2kT1A2Sgo0lCrDHKk9_3eGkTmIt2Ma6eiLpyGWePH2PXkbD6UEYw8E6PRzTQ1bUR0w';
+
+export const DEFAULT_ABOUT_BADGE = 'Pak Heri • Owner';
+export const DEFAULT_ABOUT_TITLE = 'Pembuatan dan Penyediaan Produk Mebel Berkualitas';
+export const DEFAULT_ABOUT_STORY = `Kami di Yopan Kayu merupakan workshop mebel kriya kayu solid yang dikelola langsung oleh Pak Suheri (akrab disapa Pak Heri) di Tigaraksa. Nama Yopan Kayu kami ambil dengan rasa bangga dari nama putra tercinta kami, mencerminkan ketulusan kami dalam berkarya menghasilkan perabot berkualitas tinggi bagi setiap hunian keluarga.
+
+Dengan pengalaman bertahun-tahun dalam mengolah kayu solid pilihan, kami selalu mengutamakan kerapian sambungan, kehalusan amplas, serta kenyamanan ergonomis di setiap perabot. Kami siap membantu Anda berdiskusi santai mulai dari pemilihan jenis kayu (Jati, Trembesi, Sungkai, Mahoni) hingga sentuhan akhir finishing yang paling serasi dengan ruangan Anda.
+
+Melalui kehadiran website resmi ini, kami ingin memudahkan Anda dalam mengenal karya kami, menjelajahi katalog mebel, dan langsung berdiskusi dengan kami untuk mendapatkan informasi lebih lanjut maupun melakukan pemesanan.`;
+
 export const INITIAL_BUSINESS_PROFILE: BusinessProfile = {
   id: 'yopan-kayu-main',
   business_name: 'Yopan Kayu',
   tagline: 'Pembuatan dan Penyediaan Produk Mebel Kayu',
-  description: 'Yopan Kayu merupakan usaha yang bergerak di bidang pembuatan dan penyediaan berbagai produk mebel berbahan kayu dengan mengutamakan kualitas, kerapian, dan hasil pengerjaan yang sesuai dengan kebutuhan pelanggan.',
+  description: 'Kami di Yopan Kayu merupakan workshop kriya mebel berbahan kayu solid yang mengutamakan kualitas, kerapian, dan hasil pengerjaan presisi sesuai kebutuhan Anda.',
   phone: '081234567890',
   whatsapp: '6281234567890',
   address: 'Jalan Kp. Pabuaran asem No.003, RT.002, Pete, Kec. Tigaraksa, Kabupaten Tangerang, Banten 15720',
@@ -12,7 +23,11 @@ export const INITIAL_BUSINESS_PROFILE: BusinessProfile = {
   instagram: 'yopankayu',
   email: 'kontak@yopankayu.com',
   logo_url: '/logo/logo-only.svg',
-  opening_hours: 'Senin - Sabtu: 08.00 - 17.00 WIB'
+  opening_hours: 'Senin - Sabtu: 08.00 - 17.00 WIB',
+  about_image_url: DEFAULT_ABOUT_IMAGE,
+  about_badge_text: DEFAULT_ABOUT_BADGE,
+  about_title: DEFAULT_ABOUT_TITLE,
+  about_story: DEFAULT_ABOUT_STORY,
 };
 
 export const INITIAL_CATEGORIES: Category[] = [

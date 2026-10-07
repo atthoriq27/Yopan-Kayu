@@ -254,10 +254,10 @@ export const Contact: React.FC = () => {
                   className="w-full py-3.5 bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] font-semibold rounded-full shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 transition-all active:scale-98 text-xs sm:text-sm"
                 >
                   <WhatsAppIcon className="w-4 h-4 fill-[#25D366]" />
-                  <span>Kirim Rencana ke WhatsApp Pak Heri</span>
+                  <span>Kirim Rencana ke WhatsApp Kami</span>
                 </button>
                 <span className="text-[11px] text-[#8c6b4f] text-center">
-                  Formulir ini akan otomatis membuka obrolan WhatsApp terformat dengan Pak Heri.
+                  Formulir ini akan otomatis membuka obrolan WhatsApp langsung bersama kami di workshop.
                 </span>
               </div>
 

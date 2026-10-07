@@ -57,5 +57,9 @@ export interface BusinessProfile {
   email: string;
   logo_url: string;
   opening_hours?: string;
+  about_image_url?: string;
+  about_badge_text?: string;
+  about_title?: string;
+  about_story?: string;
   updated_at?: string;
 }

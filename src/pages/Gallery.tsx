@@ -47,7 +47,7 @@ export const Gallery: React.FC = () => {
           Dokumentasi Hasil Pekerjaan
         </h1>
         <p className="text-xs sm:text-sm text-[#52443b] max-w-2xl leading-relaxed">
-          Kumpulan dokumentasi proyek nyata dari bengkel kami untuk kebutuhan hunian pribadi, apartemen, kafe, dan kantor di wilayah Jabodetabek.
+          Kumpulan dokumentasi proyek nyata dari workshop kami untuk kebutuhan hunian pribadi, apartemen, kafe, dan kantor di wilayah Jabodetabek.
         </p>
       </div>
 

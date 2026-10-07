@@ -564,6 +564,7 @@ export async function deleteGalleryItem(id: string): Promise<boolean> {
 
 // ---------------- BUSINESS PROFILE ----------------
 export async function getBusinessProfile(): Promise<BusinessProfile> {
+  let result = INITIAL_BUSINESS_PROFILE;
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase
@@ -572,12 +573,30 @@ export async function getBusinessProfile(): Promise<BusinessProfile> {
         .limit(1)
         .single();
       if (error && error.code !== 'PGRST116') throw error;
-      if (data) return data;
+      if (data) {
+        result = {
+          ...INITIAL_BUSINESS_PROFILE,
+          ...data,
+          about_image_url: data.about_image_url || INITIAL_BUSINESS_PROFILE.about_image_url,
+          about_badge_text: data.about_badge_text || INITIAL_BUSINESS_PROFILE.about_badge_text,
+          about_title: data.about_title || INITIAL_BUSINESS_PROFILE.about_title,
+          about_story: data.about_story || INITIAL_BUSINESS_PROFILE.about_story,
+        };
+      }
     } catch (err) {
       console.warn('Supabase getBusinessProfile failed, using local store:', err);
     }
   }
-  return getLocal<BusinessProfile>(STORAGE_KEYS.PROFILE, INITIAL_BUSINESS_PROFILE);
+
+  const local = getLocal<BusinessProfile>(STORAGE_KEYS.PROFILE, result);
+  return {
+    ...INITIAL_BUSINESS_PROFILE,
+    ...local,
+    about_image_url: local.about_image_url || INITIAL_BUSINESS_PROFILE.about_image_url,
+    about_badge_text: local.about_badge_text || INITIAL_BUSINESS_PROFILE.about_badge_text,
+    about_title: local.about_title || INITIAL_BUSINESS_PROFILE.about_title,
+    about_story: local.about_story || INITIAL_BUSINESS_PROFILE.about_story,
+  };
 }
 
 export async function updateBusinessProfile(profile: Partial<BusinessProfile>): Promise<BusinessProfile> {
@@ -597,9 +616,18 @@ export async function updateBusinessProfile(profile: Partial<BusinessProfile>): 
         .upsert(updated)
         .select()
         .single();
-      if (error) throw error;
-      if (data) {
-        finalResult = data;
+
+      if (error) {
+        // If Supabase table doesn't have the new about columns yet, strip them for DB upsert while keeping full state locally
+        if (error.message && error.message.toLowerCase().includes('column') && error.message.toLowerCase().includes('does not exist')) {
+          console.warn('Supabase business_profile is missing new about columns. Saving core columns to Supabase.');
+          const { about_image_url, about_badge_text, about_title, about_story, ...coreProfile } = updated as any;
+          await supabase.from('business_profile').upsert(coreProfile);
+        } else {
+          throw error;
+        }
+      } else if (data) {
+        finalResult = { ...updated, ...data };
       }
     } catch (err: any) {
       console.error('Supabase updateBusinessProfile failed:', err);
