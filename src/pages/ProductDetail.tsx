@@ -150,7 +150,7 @@ export const ProductDetail: React.FC = () => {
             <div className="p-4 rounded-2xl bg-[#faf7f2] border border-[#ede5d8] flex items-baseline justify-between">
               <div>
                 <span className="text-[11px] text-[#85746a] uppercase font-bold tracking-wider block">
-                  Estimasi Biaya Kriya
+                  Estimasi Harga Mebel
                 </span>
                 <span className="font-serif text-2xl sm:text-3xl font-bold text-[#6f3c16]">
                   {formatRupiah(product.price)}

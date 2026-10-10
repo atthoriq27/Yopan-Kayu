@@ -41,7 +41,7 @@ export const About: React.FC = () => {
           Tentang Yopan Kayu
         </h1>
         <p className="text-xs sm:text-sm text-[#52443b] max-w-2xl leading-relaxed">
-          Workshop kriya mebel berbahan kayu solid nusantara dengan dedikasi pada mutu bahan baku, kerapian sambungan, dan kepuasan Anda.
+          Workshop spesialis mebel kayu jati belanda (pinus solid) dan berbagai pilihan kayu solid di Tigaraksa. Mengutamakan kayu asli, sambungan kokoh, amplasan halus, dan harga terjangkau langsung dari pengrajin.
         </p>
       </div>
 
@@ -100,10 +100,10 @@ export const About: React.FC = () => {
         <div className="flex flex-col gap-1">
           <span className="text-xs uppercase tracking-wider text-[#6f3c16] font-bold">Bahan Baku Pilihan</span>
           <h2 className="font-serif text-2xl font-bold text-[#1c1c19]">
-            Jenis Kayu Nusantara yang Kami Olah
+            Jenis Kayu yang Kami Olah di Workshop
           </h2>
           <p className="text-xs sm:text-sm text-[#52443b]">
-            Setiap kayu memiliki karakter kepadatan, corak serat, dan keunikan masing-masing:
+            Utamanya kayu jati belanda solid, serta aneka kayu solid nusantara lainnya sesuai permintaan Anda:
           </p>
         </div>
 
@@ -112,9 +112,9 @@ export const About: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-[#ffdbc7] text-[#6f3c16] flex items-center justify-center font-bold text-sm">
               01
             </div>
-            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Jati Solid</h3>
+            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Jati Belanda (Pinus)</h3>
             <p className="text-xs text-[#52443b] leading-relaxed">
-              Raja mebel dengan kandungan minyak alami tinggi yang tahan rayap, cuaca lembap, dan memiliki serat emas cokelat ikonik.
+              Fokus utama kami. Warna cerah alami dengan serat dan alur mata kayu yang estetik. Sangat cocok untuk meja kerja, kafe, dan rak minimalis dengan harga ramah kantong.
             </p>
           </div>
 
@@ -122,9 +122,9 @@ export const About: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-[#ffdbc7] text-[#6f3c16] flex items-center justify-center font-bold text-sm">
               02
             </div>
-            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Trembesi (Suar)</h3>
+            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Jati Solid (Teak)</h3>
             <p className="text-xs text-[#52443b] leading-relaxed">
-              Memiliki corak serat sapwood dramatis dan papan utuh satu lembar tebal (live edge) tanpa sambungan untuk meja makan dan kerja mewah.
+              Kayu sangat keras dan tahan puluhan tahun dengan kandungan minyak alami anti-rayap. Pilihan tepat untuk meja makan keluarga besar dan perabot utama.
             </p>
           </div>
 
@@ -132,9 +132,9 @@ export const About: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-[#ffdbc7] text-[#6f3c16] flex items-center justify-center font-bold text-sm">
               03
             </div>
-            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Mahoni Oven</h3>
+            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Sungkai Oven</h3>
             <p className="text-xs text-[#52443b] leading-relaxed">
-              Tekstur pori halus dan padat, sangat ideal untuk pewarnaan dark walnut, perabot interior kafe, dan model bergaya klasik kontemporer.
+              Warna krem lembut dengan alur serat lurus rapi. Sangat cocok bagi Anda yang menyukai gaya Skandinavia atau Japandi modern yang bersih dan lapang.
             </p>
           </div>
 
@@ -142,9 +142,9 @@ export const About: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-[#ffdbc7] text-[#6f3c16] flex items-center justify-center font-bold text-sm">
               04
             </div>
-            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Sungkai dan Pinus</h3>
+            <h3 className="font-serif text-base font-bold text-[#1c1c19]">Kayu Mahoni Oven</h3>
             <p className="text-xs text-[#52443b] leading-relaxed">
-              Pilihan kayu berwarna cerah alami dengan serat lurus jelas, favorit untuk interior bertema Skandinavia, Japandi, dan modern minimalis.
+              Tekstur pori halus dan padat, sangat ideal untuk pewarnaan dark walnut pada mebel interior kafe vintage, meja kantor, dan bufet laci.
             </p>
           </div>
         </div>

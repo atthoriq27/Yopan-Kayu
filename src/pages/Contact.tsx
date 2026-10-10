@@ -8,7 +8,7 @@ export const Contact: React.FC = () => {
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [interest, setInterest] = useState('Meja Makan dan Kerja');
+  const [interest, setInterest] = useState('Meja Kerja / Belajar Jati Belanda');
   const [notes, setNotes] = useState('');
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const Contact: React.FC = () => {
 
   const directWaUrl = getWhatsAppUrl(
     profile?.whatsapp || '6281234567890',
-    'Halo Pak Heri, saya ingin konsultasi langsung seputar mebel kriya kayu solid.'
+    'Halo Pak Heri, saya ingin konsultasi langsung seputar mebel kayu jati belanda dan kayu solid.'
   );
 
   const address = profile?.address || 'Jalan Kp. Pabuaran asem No.003, RT.002, Pete, Kec. Tigaraksa, Kabupaten Tangerang, Banten 15720';
@@ -38,15 +38,15 @@ export const Contact: React.FC = () => {
       <div className="flex flex-col gap-2.5 max-w-2xl">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ede5d8] w-fit shadow-xs">
           <span className="w-1.5 h-1.5 rounded-full bg-[#6f3c16]" />
-          <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.12em] uppercase text-[#6f3c16]">
-            Pusat Informasi dan Konsultasi Kriya
+          <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.1em] uppercase text-[#6f3c16]">
+            Konsultasi & Pemesanan Mebel
           </span>
         </div>
         <h1 className="font-serif text-3xl sm:text-5xl font-semibold text-[#1c1c19] tracking-tight leading-[1.15]">
-          Hubungi dan Kunjungi Workshop
+          Hubungi & Kunjungi Workshop
         </h1>
         <p className="text-xs sm:text-sm text-[#52443b] leading-relaxed">
-          Pintu workshop kami di Tigaraksa selalu terbuka untuk mendiskusikan denah, rincian ukuran, serta kurasi material balok kayu solid terbaik untuk hunian Anda.
+          Pintu workshop kami di Tigaraksa selalu terbuka bagi Anda yang ingin berdiskusi santai, melihat contoh kayu jati belanda, atau membicarakan ukuran mebel custom yang pas untuk ruangan Anda.
         </p>
       </div>
 
@@ -228,11 +228,12 @@ export const Contact: React.FC = () => {
                   value={interest}
                   onChange={(val) => setInterest(val)}
                   options={[
-                    { value: 'Meja Makan dan Kerja', label: 'Meja Makan dan Kerja (Solid Teak / Trembesi)' },
-                    { value: 'Kursi dan Sofa Santai', label: 'Kursi dan Sofa Santai (Sungkai / Mahoni)' },
-                    { value: 'Lemari dan Rak Dinding', label: 'Lemari dan Rak Dinding Modular' },
-                    { value: 'Pesanan Custom Khusus', label: 'Pesanan Kustom Khusus (Sesuai Sketsa Ruang)' },
-                    { value: 'Proyek Kafe / Komersial', label: 'Proyek Kafe / Kantor / Komersial' },
+                    { value: 'Meja Kerja / Belajar Jati Belanda', label: 'Meja Kerja / Belajar Jati Belanda' },
+                    { value: 'Set Meja & Bangku Kafe Jati Belanda', label: 'Set Meja & Bangku Kafe Jati Belanda' },
+                    { value: 'Meja Makan Kayu Solid', label: 'Meja Makan Kayu Solid (Jati Belanda / Solid Teak)' },
+                    { value: 'Rak Dinding & Lemari', label: 'Rak Dinding Ambalan & Lemari' },
+                    { value: 'Pesanan Custom Khusus', label: 'Pesanan Custom Khusus (Sesuai Ukuran Ruangan)' },
+                    { value: 'Interior Kafe / Resto', label: 'Proyek Interior Kafe / Resto / Kantor' },
                   ]}
                 />
               </div>

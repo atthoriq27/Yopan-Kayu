@@ -235,7 +235,7 @@ export const AdminProductForm: React.FC = () => {
               <label className="font-bold text-[#1c1c19]">Bahan Baku Kayu</label>
               <input
                 type="text"
-                placeholder="Contoh: Kayu Jati Solid Pilihan (Kadar Air < 14%)"
+                placeholder="Contoh: Kayu Jati Belanda (Pinus Solid Pilihan)"
                 value={material}
                 onChange={(e) => setMaterial(e.target.value)}
                 className="w-full min-w-0 max-w-full box-border px-3.5 sm:px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"

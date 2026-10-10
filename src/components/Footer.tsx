@@ -56,14 +56,14 @@ export const Footer: React.FC = () => {
                 <span className="font-serif text-xl font-bold tracking-tight text-[#1c1c19] leading-tight">
                   {profile?.business_name || 'Yopan Kayu'}
                 </span>
-                <span className="text-[10px] text-[#6f3c16] uppercase tracking-[0.14em] font-bold">
-                  Workshop Kriya Kayu Solid
+                <span className="text-[10px] text-[#6f3c16] uppercase tracking-[0.12em] font-bold">
+                  Spesialis Mebel Kayu Jati Belanda
                 </span>
               </div>
             </Link>
 
             <p className="text-xs text-[#52443b] leading-relaxed max-w-sm">
-              Pengrajin mebel kayu solid di Tigaraksa. Memproduksi meja makan, kursi, credenza, dan interior kustom presisi dari balok kayu jati, trembesi, sungkai, dan mahoni pilihan.
+              Workshop spesialis mebel kayu jati belanda (pinus) solid dan aneka kayu solid di Tigaraksa. Melayani meja kerja, set kafe, rak, lemari, hingga pesanan ukuran custom dengan pengerjaan rapi dan harga terjangkau.
             </p>
 
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#e8dfd5] text-[11px] text-[#6f3c16] font-medium w-fit shadow-xs">
@@ -81,19 +81,19 @@ export const Footer: React.FC = () => {
               <li>
                 <Link to="/produk" className="hover:text-[#6f3c16] hover:underline transition-colors flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#8c6b4f]"></span>
-                  <span>Meja Makan dan Kerja Solid</span>
+                  <span>Meja Kerja & Belajar Minimalis</span>
                 </Link>
               </li>
               <li>
                 <Link to="/produk" className="hover:text-[#6f3c16] hover:underline transition-colors flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#8c6b4f]"></span>
-                  <span>Kursi dan Armchair Santai</span>
+                  <span>Set Meja & Bangku Kafe</span>
                 </Link>
               </li>
               <li>
                 <Link to="/produk" className="hover:text-[#6f3c16] hover:underline transition-colors flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#8c6b4f]"></span>
-                  <span>Credenza TV dan Lemari Rak</span>
+                  <span>Rak Dinding & Lemari Pajangan</span>
                 </Link>
               </li>
               <li>
@@ -105,7 +105,7 @@ export const Footer: React.FC = () => {
               <li>
                 <Link to="/kontak" className="hover:text-[#6f3c16] hover:underline transition-colors flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#8c6b4f]"></span>
-                  <span>Pesanan Kustom Ukuran Ruang</span>
+                  <span>Pesanan Custom Ukuran Ruangan</span>
                 </Link>
               </li>
             </ul>
@@ -119,23 +119,23 @@ export const Footer: React.FC = () => {
             <ul className="flex flex-col gap-2 text-xs text-[#52443b]">
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Kayu Jati Solid Grade A</span>
+                <span>Kayu Jati Belanda (Utama)</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Trembesi / Suar Utuh</span>
+                <span>Kayu Jati Solid Klasik</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Mahoni Oven Kering</span>
+                <span>Kayu Sungkai & Mahoni</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Sungkai Terang Natural</span>
+                <span>100% Solid (Bukan MDF)</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Sambungan Purus Kokoh</span>
+                <span>Amplas Halus & Rapi</span>
               </li>
             </ul>
           </div>
