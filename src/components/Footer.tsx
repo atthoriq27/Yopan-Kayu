@@ -81,19 +81,19 @@ export const Footer: React.FC = () => {
               <li>
                 <Link to="/produk" className="hover:text-[#6f3c16] hover:underline transition-colors flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#8c6b4f]"></span>
-                  <span>Meja Kerja & Belajar Minimalis</span>
+                  <span>Meja Kerja dan Belajar Minimalis</span>
                 </Link>
               </li>
               <li>
                 <Link to="/produk" className="hover:text-[#6f3c16] hover:underline transition-colors flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#8c6b4f]"></span>
-                  <span>Set Meja & Bangku Kafe</span>
+                  <span>Set Meja dan Bangku Kafe</span>
                 </Link>
               </li>
               <li>
                 <Link to="/produk" className="hover:text-[#6f3c16] hover:underline transition-colors flex items-center gap-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#8c6b4f]"></span>
-                  <span>Rak Dinding & Lemari Pajangan</span>
+                  <span>Rak Dinding dan Lemari Pajangan</span>
                 </Link>
               </li>
               <li>
@@ -127,7 +127,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Kayu Sungkai & Mahoni</span>
+                <span>Kayu Sungkai dan Mahoni</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
@@ -135,7 +135,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Amplas Halus & Rapi</span>
+                <span>Amplas Halus dan Rapi</span>
               </li>
             </ul>
           </div>

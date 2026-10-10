@@ -262,7 +262,7 @@ export const AdminLogin: React.FC = () => {
           {/* Secure indicator note */}
           <div className="pt-3 border-t border-[#ede5d8]/80 flex items-center justify-center gap-1.5 text-[11px] text-[#85746a]">
             <span className="material-symbols-outlined text-[14px] text-emerald-700">verified_user</span>
-            <span>Koneksi terenkripsi & terlindungi</span>
+            <span>Koneksi terenkripsi dan terlindungi</span>
           </div>
 
         </div>

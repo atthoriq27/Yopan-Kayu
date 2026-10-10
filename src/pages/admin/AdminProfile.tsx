@@ -376,7 +376,7 @@ export const AdminProfile: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 p-4 sm:p-5 bg-[#faf7f2] rounded-2xl border border-[#ede5d8]">
               {/* Left Column: Live Interactive Card Preview */}
               <div className="lg:col-span-4 flex flex-col gap-2">
-                <span className="text-xs font-bold text-[#1c1c19]">Pratinjau Foto &amp; Badge</span>
+                <span className="text-xs font-bold text-[#1c1c19]">Pratinjau Foto dan Badge</span>
                 <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#ece6dc] border border-[#ede5d8] shadow-sm">
                   <img
                     src={aboutImageUrl || DEFAULT_ABOUT_IMAGE}
@@ -459,7 +459,7 @@ export const AdminProfile: React.FC = () => {
                     className="w-full px-3.5 py-2.5 bg-white border border-[#ede5d8] rounded-xl text-xs sm:text-sm text-[#1c1c19] focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30"
                   />
                   <span className="text-[11px] text-[#85746a]">
-                    Badge kecil di sudut kiri bawah foto (misal: "Pak Heri • Owner", "Pak Suheri • Founder &amp; Pengrajin")
+                    Badge kecil di sudut kiri bawah foto (misal: "Pak Heri • Owner", "Pak Suheri • Founder dan Pengrajin")
                   </span>
                 </div>
 

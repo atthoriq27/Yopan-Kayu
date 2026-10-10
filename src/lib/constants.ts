@@ -4,7 +4,7 @@ export const DEFAULT_ABOUT_IMAGE =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuBe0pN2zKVEc3QUClmDoxqxceKE8cniJa-8CManzl-wjm19aE1cLRV-s8ehpMbQxVtqe3WQ3y6m1OqRYATluIaOkT7t3g4NxoWh44Y95JCguiKVBjOStmFRewmmgApdEnwc8jszsUieQqKa76Om_JdxWG1XVoEV7owvs6HE9DAuz06qkHSmdztZ2kT1A2Sgo0lCrDHKk9_3eGkTmIt2Ma6eiLpyGWePH2PXkbD6UEYw8E6PRzTQ1bUR0w';
 
 export const DEFAULT_ABOUT_BADGE = 'Pak Heri • Owner';
-export const DEFAULT_ABOUT_TITLE = 'Spesialis Mebel Kayu Jati Belanda & Kayu Solid Berkualitas';
+export const DEFAULT_ABOUT_TITLE = 'Spesialis Mebel Kayu Jati Belanda dan Kayu Solid Berkualitas';
 export const DEFAULT_ABOUT_STORY = `Kami di Yopan Kayu merupakan workshop mebel yang berfokus pada pengolahan kayu jati belanda (pinus solid) dan berbagai kayu solid pilihan, dikelola langsung oleh Pak Suheri (akrab disapa Pak Heri) di Tigaraksa. Nama Yopan Kayu kami ambil dari nama putra tercinta kami, sebagai wujud kesungguhan dan ketulusan kami dalam menghasilkan perabot yang rapi dan kuat untuk setiap keluarga.
 
 Fokus utama kami adalah membuat aneka perabot kayu jati belanda solid—seperti meja kerja, meja makan, rak dinding, kitchen set, hingga set meja kursi kafe. Kayu jati belanda memiliki keunggulan warna cerah alami yang bersih, alur serat yang estetik, kuat, dan harganya jauh lebih bersahabat di kantong. Kami selalu memastikan setiap sambungan kayu dibuat kokoh, kayu diserut dan diamplas halus, serta difinishing rapi agar nyaman dipakai sehari-hari.
@@ -14,7 +14,7 @@ Selain kayu jati belanda, kami juga siap melayani pembuatan mebel dengan jenis k
 export const INITIAL_BUSINESS_PROFILE: BusinessProfile = {
   id: 'yopan-kayu-main',
   business_name: 'Yopan Kayu',
-  tagline: 'Spesialis Mebel Kayu Jati Belanda & Kayu Solid Custom',
+  tagline: 'Spesialis Mebel Kayu Jati Belanda dan Kayu Solid Custom',
   description: 'Workshop spesialis mebel kayu jati belanda (pinus) solid di Tigaraksa. Melayani meja kerja, rak, lemari, kitchen set, dan perabot kafe/rumah dengan ukuran custom, amplas halus, dan harga terjangkau.',
   phone: '081234567890',
   whatsapp: '6281234567890',
@@ -33,19 +33,19 @@ export const INITIAL_BUSINESS_PROFILE: BusinessProfile = {
 export const INITIAL_CATEGORIES: Category[] = [
   {
     id: 'cat-meja',
-    name: 'Meja Kerja & Makan',
+    name: 'Meja Kerja dan Makan',
     slug: 'makan-kerja',
     created_at: new Date().toISOString()
   },
   {
     id: 'cat-kursi-sofa',
-    name: 'Kursi & Bangku',
+    name: 'Kursi dan Bangku',
     slug: 'kursi-sofa',
     created_at: new Date().toISOString()
   },
   {
     id: 'cat-lemari-rak',
-    name: 'Lemari & Rak Dinding',
+    name: 'Lemari dan Rak Dinding',
     slug: 'lemari-rak',
     created_at: new Date().toISOString()
   },
@@ -61,7 +61,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'prod-meja-kerja-pinus',
     category_id: 'cat-meja',
-    name: 'Meja Kerja & Belajar Minimalis Jati Belanda',
+    name: 'Meja Kerja dan Belajar Minimalis Jati Belanda',
     slug: 'meja-kerja-belajar-minimalis-jati-belanda',
     description: 'Meja kerja dan belajar minimalis berbahan kayu jati belanda (pinus) solid pilihan. Serat kayu tampak estetik alami dengan permukaan diamplas sangat halus dan dilapisi finishing clear doff tahan tumpahan air. Dilengkapi konstruksi kaki yang kokoh, tidak mudah goyang, dan sangat cocok untuk kamar maupun ruang kerja.',
     price: 950000,
@@ -90,7 +90,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'prod-set-meja-kafe-pinus',
     category_id: 'cat-meja',
-    name: 'Set Meja & Bangku Kafe Jati Belanda',
+    name: 'Set Meja dan Bangku Kafe Jati Belanda',
     slug: 'set-meja-bangku-kafe-jati-belanda',
     description: 'Set perabot kafe dan resto minimalis terdiri dari 1 meja utama dan 2 bangku panjang berbahan kayu jati belanda solid. Desain simpel, kokoh, dan bernuansa hangat modern. Sangat pas untuk ruang makan minimalis, balkon rumah, maupun tempat usaha kafe.',
     price: 1450000,
@@ -225,7 +225,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
   },
   {
     id: 'gal-3',
-    title: 'Set Meja & Kursi Kafe Kayu Jati Belanda',
+    title: 'Set Meja dan Kursi Kafe Kayu Jati Belanda',
     description: 'Pengerjaan 10 set meja dan bangku kafe berbahan kayu jati belanda solid finishing natural tahan air untuk coffee shop.',
     image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAWgyizXejC96nuADUU_mKweM9X_i72ko4OaZw0CnLm9YF71u2CV0D_G9nvw3JKt8SXSUhVEATGH6ezLXLKQl9sBhM9fB-9Os_o5Z0lgYoAjGAfdpFPsbooWP4ovR_zxr1eYZ7rbXECt0YhEP_uqOPSdss006DeHIiq7ZTi2fhh7jW5-bFaNV9UlvKU-ee0vZNY3jQY5SeihjJpryut0G5_QIFM6-OPvPxhfCJ3hscG3ft-kaTjxVhPlg',
     category: 'Kafe dan Komersial',
@@ -234,7 +234,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
   },
   {
     id: 'gal-4',
-    title: 'Kitchen Island & Meja Bar Kayu Solid',
+    title: 'Kitchen Island dan Meja Bar Kayu Solid',
     description: 'Meja bar dapur bersih dengan top table kayu solid bertekstur urat halus dipadu stool kursi santai.',
     image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAx_8luy2woQQRIE9H72sJbp_OoQMZ0_iCj19HpsEt_jd6uLIbgIBKBLQKNgO_hbD4V8IqbpUmWqzFwY-zqqKdr7WPr8OS24fSOGl9zlXEm2yfBodvL-t0k-d774MUhX0UGkl_ruAe1d3rjysbk0OK5da3nH2f7vmF0AvZ6RnMOkSz3XW04Hm2AElPy4gBfThbqP5wQ_Aym61I9ery3PFdEJr8pUhnPvDOaw2JW3lzB0z_g4tbYDe0SDg',
     category: 'Residensial',

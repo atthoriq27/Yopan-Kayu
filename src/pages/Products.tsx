@@ -87,7 +87,7 @@ export const Products: React.FC = () => {
           <span className="text-xs uppercase tracking-wider text-[#6f3c16] font-bold">Katalog Mebel</span>
         </div>
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1c1c19]">
-          Katalog Mebel Kayu Jati Belanda & Solid
+          Katalog Mebel Kayu Jati Belanda dan Solid
         </h1>
         <p className="text-xs sm:text-sm text-[#52443b] max-w-2xl leading-relaxed">
           Pilihan perabot dari kayu jati belanda (pinus) solid pilihan serta berbagai kayu solid lainnya. Dibuat kokoh, rapi, dan bisa dipesan sesuai ukuran ruangan Anda.

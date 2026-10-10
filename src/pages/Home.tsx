@@ -52,7 +52,7 @@ export const Home: React.FC = () => {
   const heroShowcase = [
     {
       label: 'Meja Kerja Pinus',
-      title: 'Meja Kerja & Belajar Minimalis Jati Belanda',
+      title: 'Meja Kerja dan Belajar Minimalis Jati Belanda',
       material: 'Kayu Jati Belanda (Pinus Solid Oven)',
       finish: 'Natural Clear Doff Halus (Tahan Air)',
       price: 950000,
@@ -62,13 +62,13 @@ export const Home: React.FC = () => {
     },
     {
       label: 'Set Meja Kafe',
-      title: 'Set Meja & Bangku Kafe Jati Belanda',
+      title: 'Set Meja dan Bangku Kafe Jati Belanda',
       material: 'Kayu Jati Belanda Solid Pilihan',
       finish: 'Clear Natural Semi-Doff / Walnut',
       price: 1450000,
       slug: 'set-meja-bangku-kafe-jati-belanda',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAWgyizXejC96nuADUU_mKweM9X_i72ko4OaZw0CnLm9YF71u2CV0D_G9nvw3JKt8SXSUhVEATGH6ezLXLKQl9sBhM9fB-9Os_o5Z0lgYoAjGAfdpFPsbooWP4ovR_zxr1eYZ7rbXECt0YhEP_uqOPSdss006DeHIiq7ZTi2fhh7jW5-bFaNV9UlvKU-ee0vZNY3jQY5SeihjJpryut0G5_QIFM6-OPvPxhfCJ3hscG3ft-kaTjxVhPlg',
-      badge: 'Set Kafe & Resto'
+      badge: 'Set Kafe dan Resto'
     },
     {
       label: 'Rak Dinding Pinus',
@@ -99,27 +99,27 @@ export const Home: React.FC = () => {
       name: 'Kayu Jati Belanda (Pinus Solid)',
       origin: 'Pinus Pilihan Kering Oven',
       character: 'Pilihan paling diminati karena warna cerah alaminya (krem muda) dengan serat dan mata kayu yang estetik. Ruangan jadi terasa lebih terang, bersih, dan modern. Ringan namun kokoh, bebas rayap, dan harganya sangat bersahabat di kantong dibanding jenis kayu lain.',
-      bestFor: 'Meja kerja/belajar, set meja & kursi kafe, rak dinding, kitchen set, ambalan, dan dipan',
+      bestFor: 'Meja kerja/belajar, set meja dan kursi kafe, rak dinding, kitchen set, ambalan, dan dipan',
       durability: 'Awet Bertahun-tahun (Kering Oven Bebas Rayap)',
-      hardness: 'Solid, Kuat & Ringan',
+      hardness: 'Solid, Kuat dan Ringan',
       finishType: 'Natural Clear Doff, Semi-Gloss, atau Vernis Warna Gelap',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBkdHLfVX7_rVhk4nTmZU-KYB-qUESB944nrPyLq660IXW_e015yZ9278Sx_IEtVGSDj56aOP2QDpt5mvI9o_CgR3NFuVin44gLtkjhUhz_XE-ymHROlUHPERoPaBX2Jb_p5QOVpI2hgISr6CSPzy734P2KAPGsBnkIX6Fmhw2KTLidjLrNxKHTYOmotEXjyGJNf-Tc7BmWznQbksO04EKmJpJLUQKeVNlxrNrM-QkHdLWx4RFp3W10sQ'
     },
     {
       id: 'jati',
       name: 'Kayu Jati Solid (Teak)',
-      origin: 'Jawa Tengah & Jawa Timur',
+      origin: 'Jawa Tengah dan Jawa Timur',
       character: 'Kayu legendaris yang terkenal sangat keras, tahan puluhan tahun, dan kebal rayap berkat minyak alaminya. Memiliki guratan serat cokelat keemasan yang klasik dan berkelas.',
       bestFor: 'Meja makan keluarga besar, kursi tamu, dan lemari utama',
       durability: '50+ Tahun',
-      hardness: 'Sangat Keras & Berat',
+      hardness: 'Sangat Keras dan Berat',
       finishType: 'Natural Teak Oil / Clear Doff Halus',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWWgmSdTQmqi-R2IxR7MTNxhPhbOWVe5W8C6FnWidcAyrYSaun1VS1YQfM4Ulr4EgKR7EqQqyMb_J5ot_L7qcmD-we1p7rBjENTQyaqZqVlr3e92B2wykVisaqofsP6TZ8i-8Ci5Z3VSPVaPF7H6egPcMiOQLWXYyD4XeQ7buOwkxV-VMld_gXj9p1RlcTRUauQmnh9vExHpAALJay_z8J-qJn3fdZ-yeX6FozkIgckOyE1GvINqsrRA'
     },
     {
       id: 'sungkai',
       name: 'Kayu Sungkai Oven',
-      origin: 'Sumatera & Kalimantan',
+      origin: 'Sumatera dan Kalimantan',
       character: 'Warna kayu cerah lembut dengan serat lurus yang rapi. Sangat cocok bagi Anda yang menyukai gaya minimalis Skandinavia atau Japandi yang simpel dan rapi.',
       bestFor: 'Kursi santai minimalis, meja rias, dan credenza TV',
       durability: '20+ Tahun',
@@ -130,11 +130,11 @@ export const Home: React.FC = () => {
     {
       id: 'mahoni',
       name: 'Kayu Mahoni Oven',
-      origin: 'Jawa & Sumatera',
+      origin: 'Jawa dan Sumatera',
       character: 'Tekstur pori kayu sangat rapat dan halus dengan warna cokelat kemerahan. Sangat bagus untuk pewarnaan gelap (dark walnut atau salak) yang memberi kesan hangat.',
       bestFor: 'Set meja kafe vintage, meja kerja, dan kabinet laci',
       durability: '25+ Tahun',
-      hardness: 'Keras & Padat',
+      hardness: 'Keras dan Padat',
       finishType: 'Walnut Semi-Gloss / Cokelat Tua',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAWgyizXejC96nuADUU_mKweM9X_i72ko4OaZw0CnLm9YF71u2CV0D_G9nvw3JKt8SXSUhVEATGH6ezLXLKQl9sBhM9fB-9Os_o5Z0lgYoAjGAfdpFPsbooWP4ovR_zxr1eYZ7rbXECt0YhEP_uqOPSdss006DeHIiq7ZTi2fhh7jW5-bFaNV9UlvKU-ee0vZNY3jQY5SeihjJpryut0G5_QIFM6-OPvPxhfCJ3hscG3ft-kaTjxVhPlg'
     }
@@ -158,7 +158,7 @@ export const Home: React.FC = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ede5d8] w-fit shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6f3c16]" />
               <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.1em] uppercase text-[#6f3c16]">
-                Spesialis Mebel Kayu Jati Belanda & Solid
+                Spesialis Mebel Kayu Jati Belanda dan Solid
               </span>
             </div>
 
@@ -187,7 +187,7 @@ export const Home: React.FC = () => {
                 to="/kontak"
                 className="py-2.5 sm:py-3.5 px-6 bg-white hover:bg-[#f6f2ec] text-[#1c1c19] border border-[#ede5d8] hover:border-[#6f3c16]/50 rounded-full text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-2 shadow-xs transition-all text-center"
               >
-                <span>Tanya & Konsultasi Ukuran</span>
+                <span>Tanya dan Konsultasi Ukuran</span>
               </Link>
             </div>
 
@@ -200,8 +200,8 @@ export const Home: React.FC = () => {
               </div>
               <div className="flex flex-col gap-0.5 border-l border-[#ede5d8] pl-2 sm:pl-4">
                 <span className="font-serif text-base sm:text-2xl font-bold text-[#1c1c19]">Halus</span>
-                <span className="text-[10px] sm:text-xs text-[#52443b] leading-tight font-medium">Amplas & Finishing</span>
-                <span className="text-[9px] sm:text-[10px] text-[#8c6b4f]">Mulus & nyaman disentuh</span>
+                <span className="text-[10px] sm:text-xs text-[#52443b] leading-tight font-medium">Amplas dan Finishing</span>
+                <span className="text-[9px] sm:text-[10px] text-[#8c6b4f]">Mulus dan nyaman disentuh</span>
               </div>
               <div className="flex flex-col gap-0.5 border-l border-[#ede5d8] pl-2 sm:pl-4">
                 <span className="font-serif text-base sm:text-2xl font-bold text-[#1c1c19]">Custom</span>
@@ -298,7 +298,7 @@ export const Home: React.FC = () => {
                 <span className="material-symbols-outlined text-[18px] sm:text-[20px]">carpenter</span>
               </div>
               <div className="flex flex-col">
-                <h4 className="text-xs sm:text-sm font-bold text-[#1c1c19]">Sambungan Kokoh & Rapat</h4>
+                <h4 className="text-xs sm:text-sm font-bold text-[#1c1c19]">Sambungan Kokoh dan Rapat</h4>
                 <p className="text-[11px] sm:text-xs text-[#52443b] leading-relaxed mt-0.5">
                   Dirangkai dengan sambungan kayu saling kunci yang presisi, tidak gampang goyang walau sering digeser.
                 </p>
@@ -344,7 +344,7 @@ export const Home: React.FC = () => {
               Bahan Baku Pilihan Kami
             </span>
             <h2 className="font-serif text-2xl sm:text-4xl font-semibold text-[#1c1c19] tracking-tight">
-              Spesialis Kayu Jati Belanda & Pilihan Kayu Solid Lainnya
+              Spesialis Kayu Jati Belanda dan Pilihan Kayu Solid Lainnya
             </h2>
             <p className="text-xs sm:text-sm text-[#52443b] max-w-xl leading-relaxed">
               Kami fokus pada <strong>kayu jati belanda (pinus) solid</strong> karena urat seratnya estetik, warnanya cerah bersih, dan harganya jauh lebih terjangkau. Namun kami juga siap membuatkan mebel dari kayu solid lain sesuai keinginan Anda.
@@ -402,7 +402,7 @@ export const Home: React.FC = () => {
                 <span className="text-[#52443b] text-[11px] sm:text-xs">{selectedWood.bestFor}</span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="font-bold text-[#1c1c19] uppercase tracking-wider text-[10px]">Daya Tahan & Keawetan:</span>
+                <span className="font-bold text-[#1c1c19] uppercase tracking-wider text-[10px]">Daya Tahan dan Keawetan:</span>
                 <span className="text-[#6f3c16] font-semibold text-[11px] sm:text-xs">{selectedWood.durability}</span>
               </div>
               <div className="flex flex-col gap-0.5 sm:col-span-2">
@@ -448,7 +448,7 @@ export const Home: React.FC = () => {
                 Koleksi Pilihan Workshop
               </span>
               <h2 className="font-serif text-2xl sm:text-4xl font-semibold text-[#1c1c19] tracking-tight">
-                Pilihan Mebel Populer untuk Rumah & Usaha
+                Pilihan Mebel Populer untuk Rumah dan Usaha
               </h2>
               <p className="text-xs sm:text-sm text-[#52443b] max-w-xl">
                 Mulai dari meja kerja, meja makan, rak dinding, sampai perlengkapan kafe. Semua dibuat rapi dan bisa disesuaikan dengan ukuran ruangan Anda.
@@ -548,7 +548,7 @@ export const Home: React.FC = () => {
               <div className="bg-white p-5 rounded-2xl border-2 border-[#6f3c16] shadow-sm flex flex-col gap-4">
                 <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6f3c16]">
                   <span className="material-symbols-outlined text-[18px]">verified</span>
-                  <span>100% Kayu Solid Asli (Jati Belanda & Solid)</span>
+                  <span>100% Kayu Solid Asli (Jati Belanda dan Solid)</span>
                 </div>
                 <div className="flex flex-col gap-3 text-xs text-[#1c1c19]">
                   <div className="flex items-start gap-2">
@@ -614,7 +614,7 @@ export const Home: React.FC = () => {
             {/* Row 1: Bahan Baku */}
             <div className="grid grid-cols-12 border-b border-[#ede5d8] text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Bahan Baku & Kekuatan Struktur
+                Bahan Baku dan Kekuatan Struktur
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 100% kayu solid utuh (Jati Belanda oven / kayu solid pilihan). Padat, kokoh, dan tahan beban berat tanpa melengkung.
@@ -627,7 +627,7 @@ export const Home: React.FC = () => {
             {/* Row 2: Sambungan Konstruksi */}
             <div className="grid grid-cols-12 border-b border-[#ede5d8] text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Konstruksi & Sambungan Kayu
+                Konstruksi dan Sambungan Kayu
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 Sambungan kayu saling kunci yang presisi dan kuat. Mebel tetap kokoh dan tidak goyang walau sering digeser.
@@ -637,10 +637,10 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Row 3: Ketahanan Air & Lembap */}
+            {/* Row 3: Ketahanan Air dan Lembap */}
             <div className="grid grid-cols-12 border-b border-[#ede5d8] text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Ketahanan Terhadap Air & Lembap
+                Ketahanan Terhadap Air dan Lembap
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 Tahan tumpahan air dan udara lembap. Mudah dibersihkan cukup dengan lap basah.
@@ -650,10 +650,10 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Row 4: Masa Pakai & Refinishing */}
+            {/* Row 4: Masa Pakai dan Refinishing */}
             <div className="grid grid-cols-12 text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Masa Pakai & Kemudahan Perawatan
+                Masa Pakai dan Kemudahan Perawatan
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 Awet bertahun-tahun. Dapat diamplas atau dipernis ulang kapan saja agar kembali tampak seperti baru.
@@ -669,7 +669,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* ======================================================== */}
-      {/* 6. ALUR PEMESANAN (Praktis, Mudah & Gak Ribet)           */}
+      {/* 6. ALUR PEMESANAN (Praktis, Mudah dan Gak Ribet)         */}
       {/* ======================================================== */}
       <section className="py-12 sm:py-20 bg-[#f8f5ee] border-t border-[#ede5d8]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-8 sm:gap-12">
@@ -686,7 +686,7 @@ export const Home: React.FC = () => {
                 </span>
               </div>
               <h2 className="font-serif text-2xl sm:text-4xl font-semibold text-[#1c1c19] tracking-tight leading-tight">
-                Cara Pesan Mebel Custom (Mudah & Gak Ribet)
+                Cara Pesan Mebel Custom (Mudah dan Gak Ribet)
               </h2>
               <p className="text-xs sm:text-sm text-[#52443b] leading-relaxed max-w-xl">
                 Belum punya ukuran pas atau gambar desain teknis? Tenang saja, cukup ceritakan kebutuhan Anda atau kirimkan contoh foto dari internet, kami siap bantu buatkan.
@@ -722,7 +722,7 @@ export const Home: React.FC = () => {
                   to="/kontak"
                   className="w-full py-2.5 px-4 rounded-full bg-[#faf7f2] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white border border-[#ede5d8] hover:border-[#6f3c16] text-xs font-semibold flex items-center justify-center gap-2 transition-all text-center"
                 >
-                  <span>Hubungi & Kunjungi Workshop</span>
+                  <span>Hubungi dan Kunjungi Workshop</span>
                   <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
                 </Link>
               </div>
@@ -741,7 +741,7 @@ export const Home: React.FC = () => {
                   <span className="material-symbols-outlined text-[20px] text-[#8c6b4f]/60 group-hover:text-[#6f3c16] transition-colors">design_services</span>
                 </div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-[#1c1c19]">
-                  Kirim Foto Model & Ukuran
+                  Kirim Foto Model dan Ukuran
                 </h3>
                 <p className="text-xs text-[#52443b] leading-relaxed">
                   Kirimkan foto contoh mebel yang Anda suka dan perkiraan ukuran ruangan. Kami bantu arahkan ukuran yang proporsional dan nyaman dipakai.
@@ -749,7 +749,7 @@ export const Home: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5 pt-2 border-t border-[#f0ede9] text-[11px] font-semibold text-[#6f3c16]">
                 <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                <span>Konsultasi santai & gratis</span>
+                <span>Konsultasi santai dan gratis</span>
               </div>
             </div>
 
@@ -761,7 +761,7 @@ export const Home: React.FC = () => {
                   <span className="material-symbols-outlined text-[20px] text-[#8c6b4f]/60 group-hover:text-[#6f3c16] transition-colors">palette</span>
                 </div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-[#1c1c19]">
-                  Pilih Kayu & Warna Finishing
+                  Pilih Kayu dan Warna Finishing
                 </h3>
                 <p className="text-xs text-[#52443b] leading-relaxed">
                   Pilih bahan utama kayu jati belanda yang estetik atau kayu solid lainnya. Tentukan warna finishing (natural doff, satin, atau walnut). Biaya kami hitungkan jelas di awal.
@@ -809,7 +809,7 @@ export const Home: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5 pt-2 border-t border-[#f0ede9] text-[11px] font-semibold text-[#6f3c16]">
                 <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                <span>Langsung siap ditaruh & dipakai</span>
+                <span>Langsung siap ditaruh dan dipakai</span>
               </div>
             </div>
 
@@ -905,7 +905,7 @@ export const Home: React.FC = () => {
               to="/kontak"
               className="w-full sm:w-auto px-6 py-3 bg-[#faf7f2] hover:bg-white text-[#1c1c19] rounded-full text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-md text-center"
             >
-              Lihat Kontak & Lokasi Workshop
+              Lihat Kontak dan Lokasi Workshop
             </Link>
 
             <Link

@@ -39,11 +39,11 @@ export const Contact: React.FC = () => {
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ede5d8] w-fit shadow-xs">
           <span className="w-1.5 h-1.5 rounded-full bg-[#6f3c16]" />
           <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.1em] uppercase text-[#6f3c16]">
-            Konsultasi & Pemesanan Mebel
+            Konsultasi dan Pemesanan Mebel
           </span>
         </div>
         <h1 className="font-serif text-3xl sm:text-5xl font-semibold text-[#1c1c19] tracking-tight leading-[1.15]">
-          Hubungi & Kunjungi Workshop
+          Hubungi dan Kunjungi Workshop
         </h1>
         <p className="text-xs sm:text-sm text-[#52443b] leading-relaxed">
           Pintu workshop kami di Tigaraksa selalu terbuka bagi Anda yang ingin berdiskusi santai, melihat contoh kayu jati belanda, atau membicarakan ukuran mebel custom yang pas untuk ruangan Anda.
@@ -229,9 +229,9 @@ export const Contact: React.FC = () => {
                   onChange={(val) => setInterest(val)}
                   options={[
                     { value: 'Meja Kerja / Belajar Jati Belanda', label: 'Meja Kerja / Belajar Jati Belanda' },
-                    { value: 'Set Meja & Bangku Kafe Jati Belanda', label: 'Set Meja & Bangku Kafe Jati Belanda' },
+                    { value: 'Set Meja dan Bangku Kafe Jati Belanda', label: 'Set Meja dan Bangku Kafe Jati Belanda' },
                     { value: 'Meja Makan Kayu Solid', label: 'Meja Makan Kayu Solid (Jati Belanda / Solid Teak)' },
-                    { value: 'Rak Dinding & Lemari', label: 'Rak Dinding Ambalan & Lemari' },
+                    { value: 'Rak Dinding dan Lemari', label: 'Rak Dinding Ambalan dan Lemari' },
                     { value: 'Pesanan Custom Khusus', label: 'Pesanan Custom Khusus (Sesuai Ukuran Ruangan)' },
                     { value: 'Interior Kafe / Resto', label: 'Proyek Interior Kafe / Resto / Kantor' },
                   ]}
