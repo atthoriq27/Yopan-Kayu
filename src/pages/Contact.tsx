@@ -10,6 +10,7 @@ export const Contact: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [interest, setInterest] = useState('Meja Kerja / Belajar Jati Belanda');
   const [notes, setNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     getBusinessProfile().then(setProfile);
@@ -17,9 +18,14 @@ export const Contact: React.FC = () => {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const text = `Halo Pak Heri, nama saya ${name || 'Pelanggan'}.\nSaya tertarik konsultasi perabot kayu jenis: ${interest}.\nCatatan ukuran/model: ${notes || '-'}\nNomor kontak: ${phone || '-'}`;
+    if (!name.trim()) return;
+    setIsSubmitting(true);
+    const text = `Halo Pak Heri, nama saya ${name.trim()}.\nSaya tertarik konsultasi perabot kayu jenis: ${interest}.\nCatatan ukuran/model: ${notes || '-'}\nNomor kontak: ${phone || '-'}`;
     const url = getWhatsAppUrl(profile?.whatsapp || '6281234567890', text);
-    window.open(url, '_blank');
+    setTimeout(() => {
+      window.open(url, '_blank');
+      setIsSubmitting(false);
+    }, 300);
   };
 
   const directWaUrl = getWhatsAppUrl(
@@ -35,13 +41,10 @@ export const Contact: React.FC = () => {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12 flex flex-col gap-8 sm:gap-12 pb-24 md:pb-16">
       
       {/* Editorial Header */}
-      <div className="flex flex-col gap-2.5 max-w-2xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ede5d8] w-fit shadow-xs">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#6f3c16]" />
-          <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.1em] uppercase text-[#6f3c16]">
-            Konsultasi dan Pemesanan Mebel
-          </span>
-        </div>
+      <div className="flex flex-col gap-2 max-w-2xl">
+        <span className="text-xs uppercase tracking-wider text-[#6f3c16] font-bold">
+          Konsultasi dan Pemesanan Mebel
+        </span>
         <h1 className="font-serif text-3xl sm:text-5xl font-semibold text-[#1c1c19] tracking-tight leading-[1.15]">
           Hubungi dan Kunjungi Workshop
         </h1>
@@ -148,8 +151,7 @@ export const Contact: React.FC = () => {
             </div>
 
             {/* Note at bottom of card */}
-            <div className="pt-3 border-t border-[#f0ede9] text-[11px] text-[#8c6b4f] flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#6f3c16]" />
+            <div className="pt-3 border-t border-[#f0ede9] text-[11px] text-[#8c6b4f]">
               <span>Program Kemitraan PkM Universitas Pamulang</span>
             </div>
 
@@ -252,10 +254,11 @@ export const Contact: React.FC = () => {
               <div className="pt-2 flex flex-col gap-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] font-semibold rounded-full shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 transition-all active:scale-98 text-xs sm:text-sm"
+                  disabled={isSubmitting}
+                  className="w-full py-3.5 bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] font-semibold rounded-xl shadow-xs hover:shadow-md flex items-center justify-center gap-2.5 transition-all active:scale-98 text-xs sm:text-sm disabled:opacity-75"
                 >
                   <WhatsAppIcon className="w-4 h-4 fill-[#25D366]" />
-                  <span>Kirim Rencana ke WhatsApp Kami</span>
+                  <span>{isSubmitting ? 'Membuka WhatsApp...' : 'Kirim Rencana ke WhatsApp Kami'}</span>
                 </button>
                 <span className="text-[11px] text-[#8c6b4f] text-center">
                   Formulir ini akan otomatis membuka obrolan WhatsApp langsung bersama kami di workshop.

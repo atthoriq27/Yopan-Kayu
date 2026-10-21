@@ -25,7 +25,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </span>
           )}
           {product.category && (
-            <span className="absolute bottom-2 right-2 px-1.5 sm:px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-medium truncate max-w-[80%]">
+            <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-[#1c1c19]/85 text-white text-[9px] sm:text-[10px] font-medium tracking-wide truncate max-w-[80%]">
               {product.category.name}
             </span>
           )}
@@ -61,10 +61,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="p-3 sm:p-4 pt-0">
         <Link
           to={`/produk/${product.slug}`}
-          className="w-full py-1.5 sm:py-2.5 px-2 sm:px-3 bg-[#faf7f2] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white border border-[#ede5d8] hover:border-[#6f3c16] text-[11px] sm:text-xs font-bold rounded-lg sm:rounded-xl text-center flex items-center justify-center gap-1 transition-all active:scale-95"
+          className="w-full py-2 px-3 bg-[#faf7f2] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white border border-[#ede5d8] hover:border-[#6f3c16] text-xs font-semibold rounded-lg text-center transition-all active:scale-98"
         >
-          <span>Detail</span>
-          <span className="material-symbols-outlined text-[14px] sm:text-[16px]">arrow_forward</span>
+          Lihat Spesifikasi
         </Link>
       </div>
     </article>

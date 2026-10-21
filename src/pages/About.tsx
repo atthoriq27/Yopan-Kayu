@@ -57,8 +57,8 @@ export const About: React.FC = () => {
                 (e.target as HTMLImageElement).src = DEFAULT_ABOUT_IMAGE;
               }}
             />
-            <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-2 border border-black/5 max-w-[90%]">
-              <span className="material-symbols-outlined text-[#6f3c16] text-[18px]">handyman</span>
+            <div className="absolute bottom-3 left-3 bg-white px-3.5 py-2 rounded-lg shadow-sm flex items-center gap-2 border border-[#ede5d8] max-w-[90%]">
+              <span className="material-symbols-outlined text-[#6f3c16] text-[18px]">carpenter</span>
               <span className="text-xs font-bold text-[#1c1c19] truncate">
                 {profile?.about_badge_text || DEFAULT_ABOUT_BADGE}
               </span>
@@ -67,9 +67,9 @@ export const About: React.FC = () => {
         </div>
 
         <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#fceddf] text-[#6f3c16] text-xs font-bold self-start">
-            <span>Profil Usaha</span>
-          </div>
+          <span className="text-xs uppercase tracking-wider text-[#6f3c16] font-bold">
+            Profil Usaha
+          </span>
 
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1c1c19] leading-tight">
             {profile?.about_title || DEFAULT_ABOUT_TITLE}

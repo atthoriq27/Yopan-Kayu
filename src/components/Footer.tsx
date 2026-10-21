@@ -117,26 +117,11 @@ export const Footer: React.FC = () => {
               Kayu Pilihan
             </h4>
             <ul className="flex flex-col gap-2 text-xs text-[#52443b]">
-              <li className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Kayu Jati Belanda (Utama)</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Kayu Jati Solid Klasik</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Kayu Sungkai dan Mahoni</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>100% Solid (Bukan MDF)</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[13px] text-[#006c47]">check_circle</span>
-                <span>Amplas Halus dan Rapi</span>
-              </li>
+              <li>Kayu Jati Belanda (Utama)</li>
+              <li>Kayu Jati Solid Klasik</li>
+              <li>Kayu Sungkai dan Mahoni</li>
+              <li>100% Solid (Bukan Serbuk MDF)</li>
+              <li>Amplas Halus dan Sambungan Presisi</li>
             </ul>
           </div>
 
@@ -153,7 +138,7 @@ export const Footer: React.FC = () => {
 
             <div className="flex items-center gap-1.5 text-xs text-[#78675a]">
               <span className="material-symbols-outlined text-[14px] text-[#8c6b4f]">schedule</span>
-              <span>{profile?.opening_hours || 'Senin – Sabtu: 08.00 – 17.00 WIB'}</span>
+              <span>{profile?.opening_hours || 'Senin - Sabtu: 08.00 - 17.00 WIB'}</span>
             </div>
 
             <div className="flex flex-col gap-2 pt-1">
@@ -161,18 +146,17 @@ export const Footer: React.FC = () => {
                 href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-[#faf7f2] text-[#1c1c19] border border-[#ede5d8] text-xs font-semibold transition-all shadow-xs text-center"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#faf7f2] text-[#1c1c19] border border-[#ede5d8] text-xs font-semibold transition-all shadow-xs text-center"
               >
                 <span className="material-symbols-outlined text-[14px] text-[#6f3c16]">near_me</span>
                 <span>Petunjuk Google Maps</span>
-                <span className="material-symbols-outlined text-[12px] text-[#8c6b4f]">open_in_new</span>
               </a>
 
               <a
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] text-xs font-semibold transition-all shadow-xs text-center"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] text-xs font-semibold transition-all shadow-xs text-center"
               >
                 <WhatsAppIcon className="w-3.5 h-3.5 fill-[#25D366]" />
                 <span>Diskusi Proyek via WA</span>

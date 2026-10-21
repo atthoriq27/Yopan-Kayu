@@ -99,7 +99,7 @@ export const ProductDetail: React.FC = () => {
               className="w-full h-full object-cover transition-all duration-300"
             />
             {product.is_featured && (
-              <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#6f3c16] text-[#faf7f2] text-xs font-bold shadow-sm">
+              <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-[#6f3c16] text-[#faf7f2] text-xs font-bold shadow-xs">
                 Produk Unggulan
               </span>
             )}
@@ -131,12 +131,11 @@ export const ProductDetail: React.FC = () => {
             {/* Category & Status */}
             <div className="flex items-center gap-2">
               {product.category && (
-                <span className="px-3 py-1 rounded-lg bg-[#efe9dd] text-[#6f3c16] text-xs font-bold">
+                <span className="px-2.5 py-1 rounded-md bg-[#efe9dd] text-[#6f3c16] text-xs font-bold">
                   {product.category.name}
                 </span>
               )}
-              <span className="px-2.5 py-1 rounded-lg bg-[#e7f5ee] text-[#006c47] text-xs font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#006c47]"></span>
+              <span className="px-2.5 py-1 rounded-md bg-[#e7f5ee] text-[#006c47] text-xs font-bold">
                 Siap Dipesan (Made by Order)
               </span>
             </div>
