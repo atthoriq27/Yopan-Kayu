@@ -4,9 +4,30 @@ import { loginAdmin, getAdminSession, getBusinessProfile } from '../../lib/dataS
 import { BusinessProfile } from '../../types';
 import { isSupabaseConfigured } from '../../lib/supabase';
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        container: HTMLElement | string,
+        params: {
+          sitekey: string;
+          theme?: 'light' | 'dark' | 'auto';
+          size?: 'normal' | 'compact' | 'flexible';
+          callback?: (token: string) => void;
+          'expired-callback'?: () => void;
+          'error-callback'?: () => void;
+        }
+      ) => string;
+      reset: (widgetId?: string) => void;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
+
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_DURATION_SEC = 60;
 const ATTEMPT_STORAGE_KEY = 'yk_auth_fails';
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAAFezlZCfb6ftJARm';
 
 export const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,9 +37,63 @@ export const AdminLogin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [lockoutRemaining, setLockoutRemaining] = useState(0);
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
+
+  // Turnstile Captcha State
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const turnstileContainerRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = useRef<string | null>(null);
   
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const navigate = useNavigate();
+
+  // Initialize Turnstile widget
+  useEffect(() => {
+    let pollTimer: ReturnType<typeof setInterval> | null = null;
+
+    const renderTurnstile = () => {
+      if (window.turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
+        try {
+          turnstileWidgetId.current = window.turnstile.render(turnstileContainerRef.current, {
+            sitekey: TURNSTILE_SITE_KEY,
+            theme: 'light',
+            callback: (token: string) => {
+              setTurnstileToken(token);
+              setErrorMsg('');
+            },
+            'expired-callback': () => {
+              setTurnstileToken('');
+            },
+            'error-callback': () => {
+              setTurnstileToken('');
+            }
+          });
+        } catch (e) {
+          console.warn('Turnstile render warning:', e);
+        }
+      }
+    };
+
+    if (window.turnstile) {
+      renderTurnstile();
+    } else {
+      pollTimer = setInterval(() => {
+        if (window.turnstile) {
+          renderTurnstile();
+          if (pollTimer) clearInterval(pollTimer);
+        }
+      }, 300);
+    }
+
+    return () => {
+      if (pollTimer) clearInterval(pollTimer);
+      if (turnstileWidgetId.current && window.turnstile) {
+        try {
+          window.turnstile.remove(turnstileWidgetId.current);
+          turnstileWidgetId.current = null;
+        } catch (e) {}
+      }
+    };
+  }, []);
 
   // Check existing session & lockout on load
   useEffect(() => {
@@ -106,11 +181,26 @@ export const AdminLogin: React.FC = () => {
     }
   };
 
+  const resetTurnstile = () => {
+    if (window.turnstile && turnstileWidgetId.current) {
+      try {
+        window.turnstile.reset(turnstileWidgetId.current);
+      } catch (e) {}
+    }
+    setTurnstileToken('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
     if (lockoutRemaining > 0) return;
+
+    // Verify Cloudflare Turnstile Captcha
+    if (turnstileWidgetId.current && !turnstileToken) {
+      setErrorMsg('Harap selesaikan verifikasi keamanan Cloudflare terlebih dahulu.');
+      return;
+    }
 
     // Strict input sanitization
     const sanitizedEmail = email.trim().toLowerCase();
@@ -137,10 +227,12 @@ export const AdminLogin: React.FC = () => {
         navigate('/kelola', { replace: true });
       } else {
         recordFailedAttempt();
+        resetTurnstile();
         setErrorMsg('Email atau kata sandi tidak valid.');
       }
     } catch {
       recordFailedAttempt();
+      resetTurnstile();
       setErrorMsg('Email atau kata sandi tidak valid.');
     } finally {
       setLoading(false);
@@ -238,9 +330,14 @@ export const AdminLogin: React.FC = () => {
               </div>
             </div>
 
+            {/* Cloudflare Turnstile Captcha Widget */}
+            <div className="flex justify-center my-1.5 min-h-[65px] items-center">
+              <div ref={turnstileContainerRef} className="flex justify-center"></div>
+            </div>
+
             <button
               type="submit"
-              disabled={loading || lockoutRemaining > 0}
+              disabled={loading || lockoutRemaining > 0 || (Boolean(turnstileWidgetId.current) && !turnstileToken)}
               className="w-full py-3.5 bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] font-semibold rounded-xl shadow-md transition-all active:scale-98 disabled:opacity-50 text-xs sm:text-sm mt-1 flex items-center justify-center gap-2"
             >
               {loading ? (
