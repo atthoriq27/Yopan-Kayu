@@ -158,19 +158,19 @@ export const Home: React.FC = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ede5d8] w-fit shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6f3c16]" />
               <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.1em] uppercase text-[#6f3c16]">
-                Spesialis Mebel Kayu Jati Belanda dan Solid
+                Jasa Custom Furniture dan Pengrajin Kayu Tangerang
               </span>
             </div>
 
             {/* Main Headline */}
             <h1 className="font-serif text-[28px] sm:text-5xl lg:text-[50px] font-semibold text-[#1c1c19] leading-[1.2] sm:leading-[1.16] tracking-tight">
-              Mebel Kayu Jati Belanda Custom, <br className="hidden sm:inline" />
+              Jasa Custom Furniture Kayu, <br className="hidden sm:inline" />
               <span className="text-[#6f3c16]">Rapi, Kuat, dan Pas Ukuran</span> untuk Ruangan Anda.
             </h1>
 
             {/* Subheadline Copy */}
             <p className="text-xs sm:text-base text-[#52443b] leading-relaxed max-w-xl font-normal">
-              Dibuat langsung di workshop kami di Tigaraksa menggunakan <strong>kayu jati belanda (pinus) solid pilihan</strong>. Diamplas halus, kokoh, bebas rayap, dan siap diantar utuh ke rumah Anda tanpa repot merakit sendiri.
+              Dibuat langsung di workshop kami di Tigaraksa. Melayani pesanan custom meja cafe, meja kasir, kitchen set, dipan tempat tidur, rak display, lemari, hingga booth usaha dengan aneka pilihan material kayu berkualitas sesuai kebutuhan dan anggaran Anda.
             </p>
 
             {/* Refined Action CTAs */}
@@ -194,9 +194,9 @@ export const Home: React.FC = () => {
             {/* Practical Trust Metric Cards */}
             <div className="pt-4 sm:pt-6 border-t border-[#ede5d8]/80 grid grid-cols-3 gap-2 sm:gap-4 max-w-xl">
               <div className="flex flex-col gap-0.5">
-                <span className="font-serif text-base sm:text-2xl font-bold text-[#1c1c19]">100%</span>
-                <span className="text-[10px] sm:text-xs text-[#52443b] leading-tight font-medium">Kayu Solid Asli</span>
-                <span className="text-[9px] sm:text-[10px] text-[#8c6b4f]">Bukan serbuk MDF/triplek</span>
+                <span className="font-serif text-base sm:text-2xl font-bold text-[#1c1c19]">Bahan</span>
+                <span className="text-[10px] sm:text-xs text-[#52443b] leading-tight font-medium">Kayu Pilihan</span>
+                <span className="text-[9px] sm:text-[10px] text-[#8c6b4f]">Kuat, awet, dan kokoh</span>
               </div>
               <div className="flex flex-col gap-0.5 border-l border-[#ede5d8] pl-2 sm:pl-4">
                 <span className="font-serif text-base sm:text-2xl font-bold text-[#1c1c19]">Halus</span>
