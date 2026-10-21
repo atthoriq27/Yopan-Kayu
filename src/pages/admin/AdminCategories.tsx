@@ -100,8 +100,8 @@ export const AdminCategories: React.FC = () => {
         
         {/* Left: Add New Category Form */}
         <div className="lg:col-span-5 flex flex-col gap-4 w-full min-w-0">
-          <div className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#ede5d8] shadow-warm-sm flex flex-col gap-4 w-full min-w-0 box-border overflow-hidden">
-            <h2 className="font-serif text-lg font-bold text-[#1c1c19]">
+          <div className="bg-white p-4 sm:p-6 rounded-xl border border-[#ede5d8] shadow-xs flex flex-col gap-4 w-full min-w-0 box-border overflow-hidden">
+            <h2 className="font-serif text-base sm:text-lg font-bold text-[#1c1c19]">
               Tambah Kategori Baru
             </h2>
 
@@ -114,7 +114,7 @@ export const AdminCategories: React.FC = () => {
                   placeholder="Contoh: Meja Belajar Solid"
                   value={name}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  className="w-full min-w-0 max-w-full box-border px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
+                  className="w-full min-w-0 max-w-full box-border px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
                 />
               </div>
 
@@ -126,14 +126,14 @@ export const AdminCategories: React.FC = () => {
                   placeholder="meja-belajar-solid"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
-                  className="w-full min-w-0 max-w-full box-border px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19] font-mono"
+                  className="w-full min-w-0 max-w-full box-border px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19] font-mono"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-2 w-full py-3 bg-[#6f3c16] hover:bg-[#5a2f10] text-white font-bold rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-50 text-xs sm:text-sm flex items-center justify-center gap-2"
+                className="mt-2 w-full py-2.5 bg-[#6f3c16] hover:bg-[#5a2f10] text-white font-bold rounded-lg shadow-xs transition-all active:scale-95 disabled:opacity-50 text-xs sm:text-sm flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
                 <span>Tambah Kategori</span>
@@ -144,9 +144,9 @@ export const AdminCategories: React.FC = () => {
 
         {/* Right: Category List */}
         <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="bg-white rounded-3xl border border-[#ede5d8] shadow-warm-sm overflow-hidden flex flex-col">
-            <div className="p-5 border-b border-[#ede5d8] flex items-center justify-between">
-              <h2 className="font-serif text-lg font-bold text-[#1c1c19]">
+          <div className="bg-white rounded-xl border border-[#ede5d8] shadow-xs overflow-hidden flex flex-col">
+            <div className="p-4 sm:p-5 border-b border-[#ede5d8] flex items-center justify-between">
+              <h2 className="font-serif text-base sm:text-lg font-bold text-[#1c1c19]">
                 Daftar Kategori ({categories.length})
               </h2>
             </div>
@@ -189,7 +189,7 @@ export const AdminCategories: React.FC = () => {
                     ) : (
                       <>
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-[#f0ede9] text-[#6f3c16] flex items-center justify-center font-bold">
+                          <div className="w-9 h-9 rounded-lg bg-[#f0ede9] text-[#6f3c16] flex items-center justify-center font-bold">
                             <span className="material-symbols-outlined text-[18px]">category</span>
                           </div>
                           <div className="flex flex-col">
@@ -202,7 +202,7 @@ export const AdminCategories: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleStartEdit(cat)}
-                            className="p-1.5 rounded-lg bg-[#f0ede9] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white transition-colors"
+                            className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg bg-[#f0ede9] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white transition-colors shadow-xs"
                             title="Edit Kategori"
                           >
                             <span className="material-symbols-outlined text-[18px]">edit</span>
@@ -210,7 +210,7 @@ export const AdminCategories: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleDelete(cat.id, cat.name)}
-                            className="p-1.5 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white transition-colors"
+                            className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white transition-colors shadow-xs"
                             title="Hapus Kategori"
                           >
                             <span className="material-symbols-outlined text-[18px]">delete</span>

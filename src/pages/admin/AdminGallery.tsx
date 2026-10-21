@@ -114,9 +114,9 @@ export const AdminGallery: React.FC = () => {
       <div className="flex flex-col gap-8">
         
         {/* Form Add / Edit */}
-        <div className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#ede5d8] shadow-warm-sm flex flex-col gap-5 w-full min-w-0 box-border overflow-hidden">
+        <div className="bg-white p-4 sm:p-6 rounded-xl border border-[#ede5d8] shadow-xs flex flex-col gap-5 w-full min-w-0 box-border overflow-hidden">
           <div className="flex items-center justify-between border-b border-[#ede5d8] pb-3">
-            <h2 className="font-serif text-lg font-bold text-[#1c1c19]">
+            <h2 className="font-serif text-base sm:text-lg font-bold text-[#1c1c19]">
               {isEditing ? 'Ubah Item Galeri' : 'Tambah Foto Portofolio Baru'}
             </h2>
             {isEditing && (
@@ -239,13 +239,13 @@ export const AdminGallery: React.FC = () => {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-2xl border border-[#ede5d8] shadow-warm-sm overflow-hidden flex flex-col justify-between"
+                  className="bg-white rounded-xl border border-[#ede5d8] shadow-xs overflow-hidden flex flex-col justify-between"
                 >
                   <div>
                     <div className="relative aspect-[16/10] bg-[#ece6dc]">
                       <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
                       {item.category && (
-                        <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md bg-black/60 text-white text-[10px] font-bold">
+                        <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md bg-[#1c1c19]/80 text-white text-[10px] font-bold">
                           {item.category}
                         </span>
                       )}
@@ -267,14 +267,14 @@ export const AdminGallery: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleStartEdit(item)}
-                      className="px-3 py-1.5 rounded-lg bg-[#f0ede9] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white text-xs font-bold transition-colors"
+                      className="px-3.5 py-1.5 min-h-[36px] flex items-center justify-center rounded-lg bg-[#f0ede9] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white text-xs font-bold transition-colors shadow-xs"
                     >
                       Edit
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id, item.title)}
-                      className="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white text-xs font-bold transition-colors"
+                      className="px-3.5 py-1.5 min-h-[36px] flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white text-xs font-bold transition-colors shadow-xs"
                     >
                       Hapus
                     </button>

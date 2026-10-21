@@ -83,7 +83,7 @@ export const AdminProducts: React.FC = () => {
       <div className="flex flex-col gap-6">
         
         {/* Filter & Search Toolbar */}
-        <div className="bg-white p-4 rounded-2xl border border-[#ede5d8] shadow-warm-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div className="bg-white p-4 rounded-xl border border-[#ede5d8] shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
           <div className="relative w-full sm:w-80">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#85746a] text-[18px]">
               search
@@ -93,7 +93,7 @@ export const AdminProducts: React.FC = () => {
               placeholder="Cari nama produk..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
+              className="w-full pl-9 pr-3 py-2 bg-[#faf7f2] border border-[#ede5d8] rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
             />
           </div>
 
@@ -112,13 +112,13 @@ export const AdminProducts: React.FC = () => {
         </div>
 
         {/* Products Table */}
-        <div className="bg-white rounded-2xl border border-[#ede5d8] shadow-warm-sm overflow-hidden">
+        <div className="bg-white rounded-xl border border-[#ede5d8] shadow-xs overflow-hidden">
           {loading ? (
             <div className="p-12 text-center text-xs text-[#52443b]">Memuat produk...</div>
           ) : filteredProducts.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs sm:text-sm">
-                <thead className="bg-[#faf7f2] border-b border-[#ede5d8] text-[#85746a] text-[11px] uppercase font-bold tracking-wider">
+                <thead className="bg-[#f6f2ec] border-b border-[#ede5d8] text-[#705e52] text-[11px] uppercase font-bold tracking-wider">
                   <tr>
                     <th className="py-3 px-4">Produk</th>
                     <th className="py-3 px-4">Kategori</th>
@@ -130,7 +130,7 @@ export const AdminProducts: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-[#ede5d8]">
                   {filteredProducts.map((prod) => (
-                    <tr key={prod.id} className="hover:bg-[#faf7f2]/50 transition-colors">
+                    <tr key={prod.id} className="hover:bg-[#faf7f2]/70 transition-colors">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <img
@@ -175,10 +175,10 @@ export const AdminProducts: React.FC = () => {
                           type="button"
                           onClick={() => handleToggleActive(prod)}
                           title="Klik untuk ubah status tayang"
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all ${
+                          className={`px-2.5 py-1 min-h-[32px] inline-flex items-center justify-center rounded-md text-[11px] font-semibold border transition-all ${
                             prod.is_active
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-stone-200 text-stone-600'
+                              ? 'bg-[#006c47]/10 text-[#006c47] border-[#006c47]/20 hover:bg-[#006c47]/20'
+                              : 'bg-stone-100 text-stone-600 border-stone-200 hover:bg-stone-200'
                           }`}
                         >
                           {prod.is_active ? 'Tayang' : 'Draft'}
@@ -189,7 +189,7 @@ export const AdminProducts: React.FC = () => {
                         <div className="inline-flex items-center gap-2">
                           <Link
                             to={`/kelola/produk/${prod.id}/edit`}
-                            className="p-1.5 rounded-lg bg-[#f0ede9] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white transition-colors"
+                            className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg bg-[#f0ede9] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white transition-colors shadow-xs"
                             title="Edit Produk"
                           >
                             <span className="material-symbols-outlined text-[18px]">edit</span>
@@ -198,7 +198,7 @@ export const AdminProducts: React.FC = () => {
                             type="button"
                             disabled={deletingId === prod.id}
                             onClick={() => handleDelete(prod.id, prod.name)}
-                            className="p-1.5 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white transition-colors disabled:opacity-50"
+                            className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white transition-colors disabled:opacity-50 shadow-xs"
                             title="Hapus Produk"
                           >
                             <span className="material-symbols-outlined text-[18px]">delete</span>

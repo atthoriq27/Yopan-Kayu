@@ -99,7 +99,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {/* Database Status Pill */}
           <div className="px-5 py-2.5 bg-white/5 border-b border-white/5">
             <div className="flex items-center gap-2 text-xs">
-              <span className={`w-2 h-2 rounded-full ${isSupabaseConfigured ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></span>
+              <span className={`w-1.5 h-1.5 rounded-full ${isSupabaseConfigured ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
               <span className="text-white/80 font-medium text-[11px]">
                 {isSupabaseConfigured ? 'Supabase Database Online' : 'Penyimpanan Lokal Aktif'}
               </span>
@@ -115,9 +115,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
                   isActive
-                    ? 'bg-[#6f3c16] text-white shadow-sm'
+                    ? 'bg-[#6f3c16] text-white shadow-xs'
                     : 'text-white/70 hover:text-white hover:bg-white/5'
                 }`}
               >
@@ -134,7 +134,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             to="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-white/70 hover:text-white hover:bg-white/5 transition-colors"
           >
             <span className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[17px]">open_in_new</span>
@@ -219,8 +219,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           </div>
         )}
 
-        {/* Top Bar / Breadcrumb with Header Logout Button (Pinned on Desktop) */}
-        <div className="bg-white border-b border-[#ede5d8] px-3.5 sm:px-8 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full max-w-full min-w-0 flex-shrink-0 z-20 shadow-xs">
+        {/* Top Bar / Breadcrumb (Pinned on Desktop) */}
+        <div className="bg-white border-b border-[#ede5d8] px-3.5 sm:px-8 py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full max-w-full min-w-0 flex-shrink-0 z-20 shadow-xs">
           <div className="min-w-0">
             <h1 className="text-lg sm:text-2xl font-bold font-serif text-[#1c1c19] truncate">{title}</h1>
             {subtitle && <p className="text-xs sm:text-sm text-[#52443b] mt-0.5 leading-relaxed">{subtitle}</p>}
@@ -228,16 +228,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           
           <div className="flex items-center gap-2.5 self-start sm:self-auto flex-shrink-0">
             {actionButton && <div>{actionButton}</div>}
-            
-            {/* Desktop Quick Header Logout */}
-            <button
-              onClick={handleLogout}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#ede5d8] hover:border-red-300 text-xs font-semibold text-[#52443b] hover:text-red-600 hover:bg-red-50 transition-colors"
-              title="Keluar dari Panel Admin"
-            >
-              <span className="material-symbols-outlined text-[16px]">logout</span>
-              <span>Keluar</span>
-            </button>
           </div>
         </div>
 
