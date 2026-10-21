@@ -13,6 +13,7 @@ const STORAGE_KEYS = {
   GALLERY: 'yk_gallery_v1',
   PROFILE: 'yk_profile_v2',
   AUTH: 'yk_demo_auth_v1',
+  PASSWORD: 'yk_demo_password_v1',
 };
 
 export const PROFILE_UPDATED_EVENT = 'yk_profile_updated';
@@ -785,7 +786,8 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
   }
 
   // Local development fallback (only active when Supabase env vars are not set in .env)
-  if (cleanEmail === 'admin@yopankayu.com' && cleanPassword === 'admin123') {
+  const currentDemoPass = getLocal<string>(STORAGE_KEYS.PASSWORD, 'admin123');
+  if (cleanEmail === 'admin@yopankayu.com' && cleanPassword === currentDemoPass) {
     setLocal(STORAGE_KEYS.AUTH, { isLoggedIn: true, email: cleanEmail });
     return { success: true };
   }
@@ -794,6 +796,69 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
     success: false,
     error: 'Database Supabase belum terhubung di file .env lokal Anda. Masukkan VITE_SUPABASE_URL di .env terlebih dahulu.'
   };
+}
+
+export async function changeAdminPassword(
+  oldPassword: string,
+  newPassword: string
+): Promise<{ success: boolean; error?: string }> {
+  const cleanOld = oldPassword.trim();
+  const cleanNew = newPassword.trim();
+
+  if (!cleanOld) {
+    return { success: false, error: 'Kata sandi saat ini wajib diisi.' };
+  }
+  if (!cleanNew) {
+    return { success: false, error: 'Kata sandi baru wajib diisi.' };
+  }
+  if (cleanNew.length < 6) {
+    return { success: false, error: 'Kata sandi baru minimal 6 karakter.' };
+  }
+  if (cleanOld === cleanNew) {
+    return { success: false, error: 'Kata sandi baru tidak boleh sama dengan kata sandi saat ini.' };
+  }
+
+  const session = await getAdminSession();
+  if (!session.isLoggedIn || !session.email) {
+    return { success: false, error: 'Sesi pengelola tidak aktif. Silakan login kembali.' };
+  }
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      // 1. Re-authenticate to verify old password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: session.email,
+        password: cleanOld
+      });
+      if (signInError) {
+        return { success: false, error: 'Kata sandi saat ini (lama) salah. Silakan periksa kembali.' };
+      }
+
+      // 2. Update to new password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: cleanNew
+      });
+      if (updateError) {
+        return {
+          success: false,
+          error: updateError.message || 'Gagal memperbarui kata sandi di Supabase.'
+        };
+      }
+
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: 'Terjadi gangguan koneksi ke Supabase saat memperbarui kata sandi.' };
+    }
+  }
+
+  // Local development fallback
+  const currentDemoPass = getLocal<string>(STORAGE_KEYS.PASSWORD, 'admin123');
+  if (cleanOld !== currentDemoPass) {
+    return { success: false, error: 'Kata sandi saat ini (lama) salah. Silakan periksa kembali.' };
+  }
+
+  setLocal(STORAGE_KEYS.PASSWORD, cleanNew);
+  return { success: true };
 }
 
 export async function logoutAdmin(): Promise<void> {

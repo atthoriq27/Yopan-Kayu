@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { AdminLayout } from '../../components/AdminLayout';
-import { getBusinessProfile, updateBusinessProfile, uploadImage } from '../../lib/dataService';
+import {
+  getBusinessProfile,
+  updateBusinessProfile,
+  uploadImage,
+  getAdminSession,
+  changeAdminPassword
+} from '../../lib/dataService';
 import { BusinessProfile } from '../../types';
 import {
   DEFAULT_ABOUT_IMAGE,
@@ -37,11 +43,29 @@ export const AdminProfile: React.FC = () => {
   const [uploadingAboutImg, setUploadingAboutImg] = useState(false);
   const [aboutImgNote, setAboutImgNote] = useState('');
 
+  // Form states - Keamanan Akun & Ganti Password
+  const [adminEmail, setAdminEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   useEffect(() => {
     async function load() {
       try {
-        const data = await getBusinessProfile();
+        const [data, session] = await Promise.all([
+          getBusinessProfile(),
+          getAdminSession()
+        ]);
         setProfile(data);
+        if (session && session.email) {
+          setAdminEmail(session.email);
+        }
         setBusinessName(data.business_name || '');
         setTagline(data.tagline || '');
         setDescription(data.description || '');
@@ -145,6 +169,54 @@ export const AdminProfile: React.FC = () => {
     }
   };
 
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    const cleanCurrent = currentPassword.trim();
+    const cleanNew = newPassword.trim();
+    const cleanConfirm = confirmPassword.trim();
+
+    if (!cleanCurrent) {
+      setPasswordError('Silakan masukkan kata sandi Anda saat ini.');
+      return;
+    }
+    if (!cleanNew) {
+      setPasswordError('Silakan masukkan kata sandi baru.');
+      return;
+    }
+    if (cleanNew.length < 6) {
+      setPasswordError('Kata sandi baru minimal 6 karakter.');
+      return;
+    }
+    if (cleanNew !== cleanConfirm) {
+      setPasswordError('Konfirmasi kata sandi baru tidak cocok. Periksa kembali pengetikan Anda.');
+      return;
+    }
+    if (cleanCurrent === cleanNew) {
+      setPasswordError('Kata sandi baru tidak boleh sama dengan kata sandi saat ini.');
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const res = await changeAdminPassword(cleanCurrent, cleanNew);
+      if (res.success) {
+        setPasswordSuccess('✓ Kata sandi berhasil diperbarui! Silakan gunakan kata sandi baru ini untuk login berikutnya.');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        setPasswordError(res.error || 'Gagal mengubah kata sandi.');
+      }
+    } catch (err: any) {
+      setPasswordError(err?.message || 'Terjadi kesalahan sistem saat memperbarui kata sandi.');
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   if (loading) {
     return (
       <AdminLayout title="Profil Usaha">
@@ -158,7 +230,8 @@ export const AdminProfile: React.FC = () => {
       title="Profil Usaha dan Informasi Kontak"
       subtitle="Perubahan di halaman ini akan langsung memperbarui nomor WhatsApp, alamat, dan jam buka di seluruh website."
     >
-      <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#ede5d8] shadow-warm-sm flex flex-col gap-6 w-full max-w-4xl min-w-0 box-border overflow-hidden">
+      <div className="flex flex-col gap-8 w-full max-w-4xl min-w-0">
+        <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#ede5d8] shadow-warm-sm flex flex-col gap-6 w-full min-w-0 box-border overflow-hidden">
         
         {successMsg && (
           <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2">
@@ -512,6 +585,150 @@ export const AdminProfile: React.FC = () => {
         </div>
 
       </form>
-    </AdminLayout>
-  );
+
+      {/* ======================================================== */}
+      {/* KEAMANAN AKUN & GANTI KATA SANDI                         */}
+      {/* ======================================================== */}
+      <form onSubmit={handlePasswordSubmit} className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#ede5d8] shadow-warm-sm flex flex-col gap-6 w-full min-w-0 box-border overflow-hidden">
+        
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#ede5d8] pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#faf7f2] border border-[#ede5d8] flex items-center justify-center text-[#6f3c16] flex-shrink-0 shadow-xs">
+              <span className="material-symbols-outlined text-[22px]">lock_reset</span>
+            </div>
+            <div>
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c19]">
+                Keamanan Akun dan Kata Sandi
+              </h2>
+              <p className="text-xs text-[#52443b]">
+                Ubah kata sandi pengelola untuk mengamankan akses ke panel admin Yopan Kayu.
+              </p>
+            </div>
+          </div>
+
+          {adminEmail && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#faf7f2] border border-[#ede5d8] text-xs text-[#52443b] self-start sm:self-auto">
+              <span className="material-symbols-outlined text-[15px] text-[#6f3c16]">badge</span>
+              <span className="font-mono font-medium">{adminEmail}</span>
+            </div>
+          )}
+        </div>
+
+        {passwordSuccess && (
+          <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2">
+            <span className="material-symbols-outlined text-[20px] text-emerald-700">check_circle</span>
+            <span className="font-medium">{passwordSuccess}</span>
+          </div>
+        )}
+
+        {passwordError && (
+          <div className="p-4 bg-red-50 border border-red-200 text-red-800 text-xs rounded-xl flex items-center gap-2">
+            <span className="material-symbols-outlined text-[20px] text-red-600">error</span>
+            <span className="font-medium">{passwordError}</span>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+          
+          {/* Password Saat Ini (Lama) */}
+          <div className="flex flex-col gap-1.5 sm:col-span-2">
+            <label className="font-bold text-[#1c1c19] flex items-center justify-between">
+              <span>Kata Sandi Saat Ini (Lama) *</span>
+              <span className="text-[11px] font-normal text-[#85746a]">Diperlukan untuk verifikasi akun</span>
+            </label>
+            <div className="relative">
+              <input
+                type={showCurrentPassword ? 'text' : 'password'}
+                required
+                autoComplete="current-password"
+                placeholder="Masukkan kata sandi saat ini"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="w-full px-4 py-2.5 pr-11 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#85746a] hover:text-[#1c1c19] transition-colors p-1"
+                tabIndex={-1}
+              >
+                <span className="material-symbols-outlined text-[19px]">
+                  {showCurrentPassword ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Password Baru */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-bold text-[#1c1c19]">Kata Sandi Baru *</label>
+            <div className="relative">
+              <input
+                type={showNewPassword ? 'text' : 'password'}
+                required
+                autoComplete="new-password"
+                placeholder="Minimal 6 karakter"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full px-4 py-2.5 pr-11 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#85746a] hover:text-[#1c1c19] transition-colors p-1"
+                tabIndex={-1}
+              >
+                <span className="material-symbols-outlined text-[19px]">
+                  {showNewPassword ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Konfirmasi Password Baru */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-bold text-[#1c1c19]">Konfirmasi Kata Sandi Baru *</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                required
+                autoComplete="new-password"
+                placeholder="Ulangi kata sandi baru"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-4 py-2.5 pr-11 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#85746a] hover:text-[#1c1c19] transition-colors p-1"
+                tabIndex={-1}
+              >
+                <span className="material-symbols-outlined text-[19px]">
+                  {showConfirmPassword ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div className="pt-4 border-t border-[#ede5d8] flex items-center justify-between gap-4">
+          <span className="text-[11px] text-[#85746a] hidden sm:inline">
+            Gunakan kombinasi huruf dan angka agar kata sandi kuat dan tidak mudah ditebak.
+          </span>
+          <button
+            type="submit"
+            disabled={changingPassword}
+            className="px-6 py-2.5 rounded-xl bg-[#1c1c19] hover:bg-[#6f3c16] text-white text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2 ml-auto"
+          >
+            <span className="material-symbols-outlined text-[18px]">key</span>
+            <span>{changingPassword ? 'Memperbarui...' : 'Simpan Kata Sandi Baru'}</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </AdminLayout>
+);
 };
