@@ -1,123 +1,153 @@
-# Yopan Kayu - Website Mebel & Kriya Kayu Solid
+# Yopan Kayu — Custom Furniture Platform & Admin CMS
 
-Website resmi dan sistem informasi pemasaran UMKM **Yopan Kayu** (Tigaraksa, Kabupaten Tangerang). Dibuat menggunakan React, Vite, Tailwind CSS, dan terintegrasi dengan Supabase.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-yopankayu.com-6f3c16?style=flat&logo=google-chrome&logoColor=white)](https://yopankayu.com)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-Turnstile_&_DNS-F38020?style=flat&logo=cloudflare&logoColor=white)](https://www.cloudflare.com/)
+[![Netlify](https://img.shields.io/badge/Netlify-Deployed-00C7B7?style=flat&logo=netlify&logoColor=white)](https://www.netlify.com/)
 
----
+Website resmi dan platform katalog digital untuk **Yopan Kayu**, workshop pengrajin mebel dan kriya kayu di Tigaraksa, Kabupaten Tangerang. Dibangun dengan arsitektur modern berbasis React, TypeScript, dan Supabase, serta dilengkapi portal Content Management System (CMS) mandiri dan sistem keamanan berlapis.
 
-## 🌟 Fitur Utama
-
-### 1. Halaman Publik (Tampilan Mobile & Desktop)
-- **Beranda (Landing Page) (`/`)**:
-  - Banner Kemitraan PkM Universitas Pamulang
-  - Hero Section dengan CTA ganda ("Lihat Katalog" & "Konsultasi WA")
-  - Strip Kategori Pilihan (scroll horizontal)
-  - Profil Singkat Usaha & Pengrajin Utama Mas Yopan
-  - Portofolio Preview hasil pengerjaan kriya
-  - 4 Keunggulan Bengkel Kriya (Kayu solid asli, custom ukuran, langsung pengrajin, presisi)
-  - Produk Unggulan Terpilih
-  - 5 Alur Pemesanan Mudah (non-checkout / non-ecommerce)
-  - CTA Khusus WhatsApp Desain Kustom
-  - Informasi Workshop Fisik & Peta Google Maps
-  - Footer Lengkap
-- **Katalog Produk Lengkap (`/produk`)**:
-  - Filter kategori (Semua, Kursi & Sofa, Makan & Kerja, Lemari & Rak, Pesanan Kustom)
-  - Pencarian (Search) nama produk dan jenis kayu
-  - Kartu produk informatif dengan format harga Rupiah dan tag bahan kayu
-- **Detail Produk (`/produk/:slug`)**:
-  - Galeri foto utama + thumbnail sudut lain
-  - Spesifikasi bahan baku, dimensi ukuran, dan finishing
-  - Tombol **"Tanya via WhatsApp"** dengan pesan otomatis:
-    `Halo Yopan Kayu, saya tertarik dengan produk [Nama Produk]. Saya ingin mendapatkan informasi lebih lanjut.`
-  - Rekomendasi produk terkait dari kategori yang sama
-- **Galeri Portofolio (`/galeri`)**:
-  - Dokumentasi hasil pekerjaan lapangan
-  - Filter kategori proyek (Residensial, Kafe & Komersial, Interior Rumah)
-  - Lightbox modal untuk melihat foto resolusi penuh
-  - Tombol konsultasi proyek serupa ke WhatsApp
-- **Tentang Kami (`/tentang`)**:
-  - Profil lengkap, dedikasi kayu solid nusantara (Jati, Mahoni, Trembesi, Sungkai, Pinus)
-  - Kemitraan dengan program PkM Universitas Pamulang
-- **Kontak & Workshop (`/kontak`)**:
-  - Alamat workshop di Pamulang, jam operasional, link Google Maps, Instagram resmi
-  - Formulir konsultasi cepat yang langsung tersambung ke WhatsApp
-
-### 2. Admin CMS Dashboard (`/admin`)
-- **Autentikasi Aman (`/admin/login`)**:
-  - Login via Supabase Auth atau Demo Mode (`admin@yopankayu.com` / `admin123`)
-- **Ringkasan Usaha (`/admin`)**:
-  - Metrik total produk, produk aktif, kategori, dan dokumentasi galeri
-- **Manajemen Produk (`/admin/produk`)**:
-  - Tambah, Edit, Hapus produk mebel
-  - Kelola foto utama dan multi-foto sudut lain
-  - Toggle status tayang (Aktif/Draft) & status Unggulan
-- **Manajemen Kategori (`/admin/kategori`)**:
-  - Tambah, edit, dan hapus kategori mebel
-- **Manajemen Galeri (`/admin/galeri`)**:
-  - Unggah foto portofolio, atur judul, lokasi proyek, dan kategori
-- **Pengaturan Profil Usaha (`/admin/profil`)**:
-  - Ubah nama usaha, deskripsi, nomor WhatsApp utama, alamat workshop, link maps, dan Instagram langsung tanpa coding
+🔗 **Akses Langsung:** [https://yopankayu.com](https://yopankayu.com)
 
 ---
 
-## 🛠️ Desain & Estetika (UI/UX)
-Mengadopsi spesifikasi desain **Artisanal Woodcraft Commerce**:
-- **Warna Pokok**: Teak / Cognac Brown (`#6f3c16` / `#85532b`), WhatsApp Emerald Green (`#006c47`), Soft Warm Eggshell (`#faf7f2`), Soft Sand Border (`#ede5d8`).
-- **Tipografi**: Heading serif berwibawa (*Playfair Display* / *Merriweather*) dipadukan sans-serif modern (*Plus Jakarta Sans*).
-- **Pengalaman Mobile**: Bottom navigation bar bergaya native app, touch drawer, dan tombol cepat WhatsApp melayang.
+## 📐 Arsitektur & Fitur Utama
+
+### 1. Antarmuka Publik (Client Experience)
+- **Katalog Produk Dinamis (`/produk`)**: Penyaringan kategori real-time, pencarian instan nama produk & bahan kayu, serta indikator spesifikasi material.
+- **Detail Produk & Konsultasi Langsung (`/produk/:slug`)**: Galeri foto multi-sudut, spesifikasi dimensi, dan tombol pemesanan WhatsApp otomatis dengan *pre-filled message*.
+- **Portofolio Galeri Proyek (`/galeri`)**: Dokumentasi pengerjaan lapangan (furnitur kafe, residensial, kantor) dengan modal preview resolusi tinggi.
+- **Profil Workshop & Informasi Kayu (`/tentang`, `/kontak`)**: Komparasi karakteristik kayu solid (Jati Belanda/Pinus, Mahoni, Sungkai, Jati) dan rute Google Maps terintegrasi.
+- **Pengalaman Mobile-First**: Navigasi bawah (*bottom bar*) ala aplikasi native, drawer menu sentuh, serta tombol WhatsApp melayang.
+
+### 2. Portal Manajemen Pengelola (`/kelola`)
+- **Autentikasi Terproteksi (`/kelola/login`)**: Dilengkapi sistem verifikasi ganti kata sandi, *rate-limiting* lokal, dan *lockout timer* mitigasi serangan brute-force.
+- **Proteksi Bot Cloudflare Turnstile**: Integrasi CAPTCHA transparan tanpa teka-teki visual yang mengganggu pengguna asli.
+- **Manajemen Inventaris & Katalog (`/kelola/produk`)**: Operasi CRUD produk lengkap dengan status tayang (Draft/Aktif) dan penanda Produk Unggulan.
+- **Manajemen Kategori & Galeri (`/kelola/kategori`, `/kelola/galeri`)**: Pengelolaan taksonomi mebel dan dokumentasi foto proyek.
+- **Pengaturan Profil Usaha (`/kelola/profil`)**: Modifikasi nomor WhatsApp, alamat workshop, tautan Google Maps, dan media sosial secara mandiri tanpa menyentuh kode.
+
+### 3. Keamanan & Infrastruktur (Production Hardening)
+- **Route Cloaking**: Rute umum bot (`/admin` dan `/admin/*`) otomatis dialihkan ke halaman utama, memitigasi pemindaian bot otomatis.
+- **Content Security Policy (CSP)**: Konfigurasi header ketat pada Netlify (`netlify.toml`) untuk mencegah XSS, clickjacking (`X-Frame-Options: DENY`), dan injeksi skrip berbahaya.
+- **Cloudflare Edge Protection**: DNS terkelola dengan Bot Fight Mode aktif untuk menyaring lalu lintas bot berbahaya sebelum mencapai server.
+
+### 4. Search Engine Optimization (Technical & Local SEO)
+- **Schema.org Structured Data**: Integrasi JSON-LD bertipe `HomeAndConstructionBusiness` untuk mendukung *Google Knowledge Graph* dan profil bisnis lokal.
+- **Indeks Google & Sitelinks**: Terindeks di peringkat **#1 Google Search** dengan tautan navigasi langsung (*Google Sitelinks*).
+- **Aset Favicon Multi-Platform**: Mendukung SVG vektor, ICO multi-ukuran (16px, 32px, 48px), PNG standar Google (48px, 96px, 192px), dan Apple Touch Icon.
+- **XML Sitemap Otomatis**: Dilengkapi konfigurasi frekuensi pembaruan (*changefreq*) dan prioritas perayapan untuk mesin pencari.
 
 ---
 
-## 🚀 Cara Menjalankan Secara Lokal
+## 🛠️ Tech Stack
 
-1. **Install dependensi:**
-   ```bash
-   npm install
-   ```
-
-2. **Jalankan development server:**
-   ```bash
-   npm run dev
-   ```
-   Buka peramban di: `http://localhost:5173/`
-
-3. **Build produksi:**
-   ```bash
-   npm run build
-   ```
+| Layer | Teknologi |
+|---|---|
+| **Frontend Framework** | React 18, TypeScript, Vite |
+| **Styling** | Tailwind CSS, PostCSS, Google Fonts (Playfair Display, Merriweather, Plus Jakarta Sans) |
+| **Icons & UI Assets** | Lucide React, Google Material Symbols |
+| **Routing & Navigation**| React Router DOM v6 (dengan layout persist & scroll restoration) |
+| **Backend & Database** | Supabase (PostgreSQL, Row Level Security, Storage Buckets, Auth) |
+| **Security & Captcha** | Cloudflare Turnstile, Strict CSP Headers |
+| **Deployment & CI/CD** | Netlify (Automated Git-triggered builds) |
+| **Domain & DNS** | Cloudflare DNS (HTTPS, DNSSEC, Bot Management) |
 
 ---
 
-## 🗄️ Setup Database Supabase
+## 📁 Struktur Direktori
 
-1. Buat proyek baru di [Supabase](https://supabase.com).
-2. Buka menu **SQL Editor** di dashboard Supabase Anda.
-3. Buka file [schema.sql](file:///c:/CODING/Yopan%20Kayu/supabase/schema.sql) di proyek ini, salin seluruh kodenya, lalu klik **Run**.
-   Script ini secara otomatis membuat:
-   - Tabel `categories`, `products`, `product_images`, `gallery`, `business_profile`
-   - Row Level Security (RLS) policies (Publik hanya bisa membaca data aktif, Admin dapat mengelola CRUD)
-   - Storage buckets: `products`, `gallery`, `business`
-   - Data awal (seed data)
-4. Buat user admin baru di Supabase menu **Authentication** -> **Users** -> **Add user** (misal: `admin@yopankayu.com` dengan password yang aman).
-5. Salin URL dan Anon Key dari **Project Settings** -> **API**, lalu masukkan ke dalam file `.env`:
-   ```env
-   VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
-   VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-   ```
-
-*Catatan: Jika Supabase belum dikonfigurasi, website otomatis berjalan menggunakan mode penyimpanan lokal (localStorage) dengan data bawaan yang lengkap sehingga langsung bisa digunakan untuk pengujian dan demo.*
+```text
+yopan-kayu/
+├── public/                 # Aset statis publik (Favicon, Sitemap, Robots, Logo)
+│   ├── favicon.svg         # Vektor favicon resmi
+│   ├── favicon-48x48.png   # Ikon standar Google Search
+│   ├── sitemap.xml         # Peta situs terindeks Google
+│   └── _redirects          # SPA fallback routing untuk Netlify
+├── src/
+│   ├── components/         # Komponen UI modular (Navbar, Footer, ProductCard, dll.)
+│   ├── lib/
+│   │   ├── constants.ts    # Data fallback & initial state
+│   │   ├── dataService.ts  # Layer abstraksi data (Supabase API / LocalStorage)
+│   │   └── supabase.ts     # Inisialisasi klien Supabase
+│   ├── pages/              # Halaman publik (Home, Products, Gallery, About, Contact)
+│   │   └── admin/          # Halaman CMS pengelola (/kelola/*)
+│   ├── types/              # Deklarasi tipe TypeScript (Product, Category, Profile)
+│   ├── App.tsx             # Konfigurasi routing utama & proteksi rute
+│   ├── main.tsx            # Entry point aplikasi React
+│   └── index.css           # Styling dasar & utilitas kustom
+├── supabase/
+│   └── schema.sql          # Skema database PostgreSQL, RLS policies, & storage
+├── netlify.toml            # Pengaturan build & header keamanan produksi (CSP/HSTS)
+├── tailwind.config.js      # Konfigurasi tema warna & tipografi Tailwind
+└── vite.config.ts          # Konfigurasi bundler Vite
+```
 
 ---
 
-## 🌐 Panduan Deployment ke Netlify
+## 🚀 Panduan Memulai (Local Development)
 
-1. Hubungkan repository GitHub ke Netlify.
-2. Atur Build command:
-   - **Build command**: `npm run build`
-   - **Publish directory**: `dist`
-3. Tambahkan Environment Variables di Netlify:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-4. Untuk mendukung routing client-side (SPA) di Netlify, file `public/_redirects` telah disiapkan:
-   ```text
-   /*    /index.html   200
-   ```
+### Prasyarat
+- [Node.js](https://nodejs.org/) (versi 18 ke atas disarankan)
+- Package manager: `npm` atau `pnpm`
+
+### 1. Kloning Repository
+```bash
+git clone https://github.com/atthoriq27/Yopan-Kayu.git
+cd Yopan-Kayu
+```
+
+### 2. Instal Dependensi
+```bash
+npm install
+```
+
+### 3. Konfigurasi Environment Variables
+Salin file `.env.example` menjadi `.env`:
+```bash
+cp .env.example .env
+```
+Isi konfigurasi Supabase Anda:
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_TURNSTILE_SITE_KEY=your-turnstile-site-key
+```
+> *Catatan: Jika variabel Supabase dikosongkan, aplikasi akan otomatis berjalan menggunakan mock data bawaan (`localStorage`) sehingga seluruh antarmuka tetap dapat diuji secara penuh.*
+
+### 4. Jalankan Server Development
+```bash
+npm run dev
+```
+Buka browser di `http://localhost:5173`.
+
+### 5. Build Produksi
+Untuk menguji hasil bundle sebelum deployment:
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## 🗄️ Inisialisasi Database (Supabase)
+
+1. Buat proyek baru di [Supabase Dashboard](https://supabase.com).
+2. Buka menu **SQL Editor**.
+3. Buka file [`supabase/schema.sql`](file:///c:/CODING/Yopan%20Kayu/supabase/schema.sql), salin seluruh isi kodenya, lalu klik **Run**.
+4. Skrip akan secara otomatis membuat:
+   - Tabel: `categories`, `products`, `product_images`, `gallery`, dan `business_profile`.
+   - Kebijakan **Row Level Security (RLS)**: Publik hanya dapat membaca data yang aktif; Pengelola terautentikasi dapat melakukan operasi CRUD penuh.
+   - Storage Buckets: `products`, `gallery`, dan `business` beserta kebijakan aksesnya.
+5. Buat akun pengelola di **Authentication** $\rightarrow$ **Users** $\rightarrow$ **Add User**.
+
+---
+
+## 📄 Lisensi & Kontributor
+
+Dikembangkan oleh **[Arfii](https://github.com/atthoriq27)**.  
+Proyek ini dilisensikan di bawah lisensi [MIT](LICENSE).

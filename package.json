@@ -2,6 +2,19 @@
   "name": "yopan-kayu",
   "private": true,
   "version": "1.0.0",
+  "description": "Platform katalog digital dan CMS manajemen mebel custom kayu Yopan Kayu",
+  "author": "Arfii",
+  "license": "MIT",
+  "homepage": "https://yopankayu.com",
+  "keywords": [
+    "react",
+    "typescript",
+    "vite",
+    "supabase",
+    "furniture-catalog",
+    "cms",
+    "tailwind"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
