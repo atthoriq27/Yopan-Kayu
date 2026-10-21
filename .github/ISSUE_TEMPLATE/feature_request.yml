@@ -1,0 +1,30 @@
+name: 💡 Usulan Fitur Baru
+description: Ajukan ide atau saran perbaikan untuk pengembangan platform Yopan Kayu.
+title: "[FEAT]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: Sampaikan ide atau fitur yang menurut Anda bermanfaat untuk calon pembeli atau pengelola workshop.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Kebutuhan / Masalah yang Ingin Diselesaikan
+      description: Apa masalah yang melatarbelakangi usulan fitur ini?
+      placeholder: Contoh pembeli kesulitan menghitung estimasi ongkir...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solusi yang Diusulkan
+      description: Gambarkan bagaimana fitur ini seharusnya bekerja.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatif yang Dipertimbangkan
+      description: Apakah ada opsi lain yang sempat dipikirkan?
+    validations:
+      required: false

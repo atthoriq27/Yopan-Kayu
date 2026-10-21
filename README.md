@@ -1,6 +1,8 @@
 # Yopan Kayu — Custom Furniture Platform & Admin CMS
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-yopankayu.com-6f3c16?style=flat&logo=google-chrome&logoColor=white)](https://yopankayu.com)
+[![CI Validation](https://github.com/atthoriq27/Yopan-Kayu/actions/workflows/ci.yml/badge.svg)](https://github.com/atthoriq27/Yopan-Kayu/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -147,7 +149,17 @@ npm run preview
 
 ---
 
-## 📄 Lisensi & Kontributor
+## 📄 Dokumentasi & Standar Komunitas
+
+- [Panduan Kontribusi (CONTRIBUTING.md)](CONTRIBUTING.md)
+- [Pedoman Perilaku Komunitas (CODE_OF_CONDUCT.md)](CODE_OF_CONDUCT.md)
+- [Catatan Rilis (CHANGELOG.md)](CHANGELOG.md)
+- [Kebijakan Keamanan (SECURITY.md)](SECURITY.md)
+- [Lisensi Proyek (LICENSE)](LICENSE)
+
+---
+
+## 👤 Pengembang Utama
 
 Dikembangkan oleh **[Arfii](https://github.com/atthoriq27)**.  
-Proyek ini dilisensikan di bawah lisensi [MIT](LICENSE).
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).

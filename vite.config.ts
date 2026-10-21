@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5173,
     host: true,
     watch: {
-      ignored: ['**/Logo/**', '**/*.png', '**/*.jpg', '**/*.jpeg']
+      ignored: ['**/*.png', '**/*.jpg', '**/*.jpeg']
     }
   }
 });
