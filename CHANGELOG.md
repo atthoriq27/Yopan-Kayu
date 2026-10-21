@@ -13,7 +13,6 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
 - **Verifikasi Ganti Kata Sandi**: Fitur pembaruan kata sandi akun pengelola dengan validasi kata sandi lama pada `/kelola/profil`.
 - **Aset Favicon Multi-Ukuran**: Peningkatan ikon situs web dengan logo resmi pohon YK dalam format SVG, PNG (48px, 96px, 192px), ICO, dan Apple Touch Icon.
 - **Data Terstruktur Schema.org**: Penerapan Schema JSON-LD `HomeAndConstructionBusiness` untuk memperkuat indeks profil bisnis lokal di Google Search.
-- **GitHub Collaboration Templates**: Template Issue (Bug Report, Feature Request) dan Pull Request.
 - **Workflow CI/CD**: Otomatisasi GitHub Actions untuk pengecekan tipe (*typecheck*) dan validasi *build*.
 
 ### Diubah

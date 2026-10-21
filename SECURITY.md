@@ -6,8 +6,8 @@ Pembaruan keamanan aktif diterapkan pada versi rilis berikut:
 
 | Versi | Didukung |
 |---|---|
-| `1.2.x` | :white_check_mark: |
-| `< 1.2.0` | :x: |
+| `1.2.x` | Ya |
+| `< 1.2.0` | Tidak |
 
 ---
 
