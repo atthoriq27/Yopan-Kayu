@@ -149,12 +149,6 @@ export const Contact: React.FC = () => {
               )}
 
             </div>
-
-            {/* Note at bottom of card */}
-            <div className="pt-3 border-t border-[#f0ede9] text-[11px] text-[#8c6b4f]">
-              <span>Program Kemitraan PkM Universitas Pamulang</span>
-            </div>
-
           </div>
 
           {/* Clean Map Preview Container */}

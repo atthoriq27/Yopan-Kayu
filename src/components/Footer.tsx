@@ -65,11 +65,6 @@ export const Footer: React.FC = () => {
             <p className="text-xs text-[#52443b] leading-relaxed max-w-sm">
               Workshop spesialis mebel kayu jati belanda (pinus) solid dan aneka kayu solid di Tigaraksa. Melayani meja kerja, set kafe, rak, lemari, hingga pesanan ukuran custom dengan pengerjaan rapi dan harga terjangkau.
             </p>
-
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#e8dfd5] text-[11px] text-[#6f3c16] font-medium w-fit shadow-xs">
-              <span className="material-symbols-outlined text-[14px]">school</span>
-              <span>Kolaborasi PkM Univ. Pamulang</span>
-            </div>
           </div>
 
           {/* Column 2: Katalog & Layanan (lg:col-span-3) */}
