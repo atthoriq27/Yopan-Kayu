@@ -97,7 +97,7 @@ export const AdminProfile: React.FC = () => {
     setUploadingLogo(true);
     setUploadNote('');
     try {
-      const url = await uploadImage(file, 'business');
+      const url = await uploadImage(file, 'business', { isLogo: true, maxWidth: 600, maxHeight: 600, quality: 0.95 });
       setLogoUrl(url);
       setUploadNote('✓ Logo baru berhasil dioptimasi. Klik "Perbarui Profil Usaha" di bawah untuk menerapkan.');
     } catch (err: any) {
@@ -119,9 +119,9 @@ export const AdminProfile: React.FC = () => {
     setUploadingAboutImg(true);
     setAboutImgNote('');
     try {
-      const url = await uploadImage(file, 'business');
+      const url = await uploadImage(file, 'business', { isLogo: false, maxWidth: 1920, maxHeight: 1920, quality: 0.90 });
       setAboutImageUrl(url);
-      setAboutImgNote('✓ Foto profil pengrajin berhasil diunggah. Klik "Perbarui Profil Usaha" untuk menerapkan.');
+      setAboutImgNote('✓ Foto profil pengrajin resolusi tinggi (HD) berhasil diunggah. Klik "Perbarui Profil Usaha" untuk menerapkan.');
     } catch (err: any) {
       alert(err?.message || 'Gagal mengunggah foto.');
     } finally {

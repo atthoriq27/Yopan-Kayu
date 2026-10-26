@@ -669,13 +669,17 @@ function dataUrlToBlob(dataUrl: string): Blob {
 }
 
 // ---------------- STORAGE / IMAGE UPLOAD ----------------
-export async function uploadImage(file: File, bucket: 'products' | 'gallery' | 'business' = 'products'): Promise<string> {
-  const isLogo = bucket === 'business';
-  const maxWidth = isLogo ? 400 : 1000;
-  const maxHeight = isLogo ? 400 : 1000;
-  const quality = isLogo ? 0.9 : 0.82;
+export async function uploadImage(
+  file: File, 
+  bucket: 'products' | 'gallery' | 'business' = 'products',
+  options?: { isLogo?: boolean; maxWidth?: number; maxHeight?: number; quality?: number }
+): Promise<string> {
+  const isLogo = options?.isLogo ?? (bucket === 'business' && (file.type === 'image/svg+xml' || file.name.toLowerCase().includes('logo')));
+  const maxWidth = options?.maxWidth ?? (isLogo ? 600 : 1920);
+  const maxHeight = options?.maxHeight ?? (isLogo ? 600 : 1920);
+  const quality = options?.quality ?? (isLogo ? 0.95 : 0.90);
 
-  // Compress image client-side first to optimize payload size
+  // Compress image client-side first to optimize payload size without sacrificing sharpness
   let compressedDataUrl = '';
   try {
     compressedDataUrl = await compressImageFile(file, maxWidth, maxHeight, quality);
