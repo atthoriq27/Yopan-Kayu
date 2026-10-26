@@ -11,7 +11,7 @@ const STORAGE_KEYS = {
   CATEGORIES: 'yk_categories_v1',
   PRODUCTS: 'yk_products_v1',
   GALLERY: 'yk_gallery_v1',
-  PROFILE: 'yk_profile_v2',
+  PROFILE: 'yk_profile_v3',
   AUTH: 'yk_demo_auth_v1',
   PASSWORD: 'yk_demo_password_v1',
 };
@@ -124,9 +124,6 @@ function ensureLocalSeed() {
   }
   if (!localStorage.getItem(STORAGE_KEYS.GALLERY)) {
     setLocal(STORAGE_KEYS.GALLERY, INITIAL_GALLERY);
-  }
-  if (!localStorage.getItem(STORAGE_KEYS.PROFILE)) {
-    setLocal(STORAGE_KEYS.PROFILE, INITIAL_BUSINESS_PROFILE);
   }
 }
 
@@ -565,17 +562,18 @@ export async function deleteGalleryItem(id: string): Promise<boolean> {
 
 // ---------------- BUSINESS PROFILE ----------------
 export async function getBusinessProfile(): Promise<BusinessProfile> {
-  let result = INITIAL_BUSINESS_PROFILE;
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase
         .from('business_profile')
         .select('*')
         .limit(1)
-        .single();
+        .maybeSingle();
+
       if (error && error.code !== 'PGRST116') throw error;
+
       if (data) {
-        result = {
+        const result: BusinessProfile = {
           ...INITIAL_BUSINESS_PROFILE,
           ...data,
           about_image_url: data.about_image_url || INITIAL_BUSINESS_PROFILE.about_image_url,
@@ -583,13 +581,17 @@ export async function getBusinessProfile(): Promise<BusinessProfile> {
           about_title: data.about_title || INITIAL_BUSINESS_PROFILE.about_title,
           about_story: data.about_story || INITIAL_BUSINESS_PROFILE.about_story,
         };
+        // Sync local cache with fresh server data
+        setLocal(STORAGE_KEYS.PROFILE, result);
+        return result;
       }
     } catch (err) {
       console.warn('Supabase getBusinessProfile failed, using local store:', err);
     }
   }
 
-  const local = getLocal<BusinessProfile>(STORAGE_KEYS.PROFILE, result);
+  // Fallback to local store or initial constants
+  const local = getLocal<BusinessProfile>(STORAGE_KEYS.PROFILE, INITIAL_BUSINESS_PROFILE);
   return {
     ...INITIAL_BUSINESS_PROFILE,
     ...local,
@@ -619,11 +621,13 @@ export async function updateBusinessProfile(profile: Partial<BusinessProfile>): 
         .single();
 
       if (error) {
-        // If Supabase table doesn't have the new about columns yet, strip them for DB upsert while keeping full state locally
+        // If Supabase table doesn't have the new about columns yet
         if (error.message && error.message.toLowerCase().includes('column') && error.message.toLowerCase().includes('does not exist')) {
           console.warn('Supabase business_profile is missing new about columns. Saving core columns to Supabase.');
           const { about_image_url, about_badge_text, about_title, about_story, ...coreProfile } = updated as any;
           await supabase.from('business_profile').upsert(coreProfile);
+          setLocal(STORAGE_KEYS.PROFILE, finalResult);
+          throw new Error('Kolom "about_image_url" belum ada di tabel Supabase. Data profil utama berhasil disimpan, namun foto Tentang Kami belum bisa tersimpan di server untuk device lain. Harap jalankan script SQL migrasi di Supabase SQL Editor.');
         } else {
           throw error;
         }
