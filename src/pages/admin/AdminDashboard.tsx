@@ -135,7 +135,7 @@ export const AdminDashboard: React.FC = () => {
               className="p-3.5 rounded-lg bg-[#faf7f2] border border-[#ede5d8] hover:border-[#6f3c16] hover:bg-white transition-all flex items-center gap-3 text-xs sm:text-sm font-semibold text-[#1c1c19] group"
             >
               <span className="material-symbols-outlined text-[#6f3c16] text-[20px] group-hover:scale-110 transition-transform">tune</span>
-              <span>Profil & Kontak</span>
+              <span>Profil dan Kontak</span>
             </Link>
           </div>
         </div>

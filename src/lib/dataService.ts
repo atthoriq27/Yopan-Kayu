@@ -116,6 +116,7 @@ export async function compressImageFile(
 
 // Ensure local seed is initialized without overwriting user changes
 function ensureLocalSeed() {
+  if (isSupabaseConfigured) return;
   if (!localStorage.getItem(STORAGE_KEYS.CATEGORIES)) {
     setLocal(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
   }
@@ -138,12 +139,14 @@ export async function getCategories(): Promise<Category[]> {
         .select('*')
         .order('name');
       if (error) throw error;
-      return data || [];
+      const result = (data || []) as Category[];
+      setLocal(STORAGE_KEYS.CATEGORIES, result);
+      return result;
     } catch (err) {
       console.warn('Supabase getCategories failed, using local store:', err);
     }
   }
-  return getLocal<Category[]>(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+  return getLocal<Category[]>(STORAGE_KEYS.CATEGORIES, isSupabaseConfigured ? [] : INITIAL_CATEGORIES);
 }
 
 export async function saveCategory(category: Partial<Category>): Promise<Category> {
@@ -248,6 +251,7 @@ export async function getProducts(options?: {
       if (error) throw error;
 
       let result = (data || []) as Product[];
+      setLocal(STORAGE_KEYS.PRODUCTS, result);
       if (categorySlug && categorySlug !== 'semua') {
         result = result.filter(p => p.category?.slug === categorySlug);
       }
@@ -258,8 +262,8 @@ export async function getProducts(options?: {
   }
 
   // Local store fallback
-  const categories = getLocal<Category[]>(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
-  let list = getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
+  const categories = getLocal<Category[]>(STORAGE_KEYS.CATEGORIES, isSupabaseConfigured ? [] : INITIAL_CATEGORIES);
+  let list = getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, isSupabaseConfigured ? [] : INITIAL_PRODUCTS);
 
   list = list.map(prod => ({
     ...prod,
@@ -477,13 +481,15 @@ export async function getGallery(categoryFilter?: string): Promise<GalleryItem[]
 
       const { data, error } = await query;
       if (error) throw error;
-      return data || [];
+      const result = (data || []) as GalleryItem[];
+      setLocal(STORAGE_KEYS.GALLERY, result);
+      return result;
     } catch (err) {
       console.warn('Supabase getGallery failed, using local store:', err);
     }
   }
 
-  let list = getLocal<GalleryItem[]>(STORAGE_KEYS.GALLERY, INITIAL_GALLERY);
+  let list = getLocal<GalleryItem[]>(STORAGE_KEYS.GALLERY, isSupabaseConfigured ? [] : INITIAL_GALLERY);
   if (categoryFilter && categoryFilter !== 'Semua') {
     list = list.filter(item => item.category === categoryFilter);
   }

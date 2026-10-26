@@ -15,10 +15,10 @@ export const Products: React.FC = () => {
   const activeCategoryParam = searchParams.get('kategori') || 'semua';
   const searchQueryParam = searchParams.get('search') || '';
 
-  const [products, setProducts] = useState<Product[]>(() => INITIAL_PRODUCTS);
-  const [categories, setCategories] = useState<Category[]>(() => INITIAL_CATEGORIES);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [profile, setProfile] = useState<BusinessProfile>(() => INITIAL_BUSINESS_PROFILE);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState(searchQueryParam);
 
   useEffect(() => {
@@ -27,6 +27,7 @@ export const Products: React.FC = () => {
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       try {
         const [cats, prof, prods] = await Promise.all([
           getCategories(),
@@ -41,6 +42,8 @@ export const Products: React.FC = () => {
         setProducts(prods);
       } catch (err) {
         console.warn('Error fetching products:', err);
+      } finally {
+        setLoading(false);
       }
     }
     fetchData();

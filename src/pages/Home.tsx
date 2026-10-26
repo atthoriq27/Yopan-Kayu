@@ -11,14 +11,10 @@ import {
 import { Product, Category, GalleryItem, BusinessProfile } from '../types';
 
 export const Home: React.FC = () => {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>(() =>
-    INITIAL_PRODUCTS.filter(p => p.is_featured).slice(0, 4)
-  );
-  const [allProducts, setAllProducts] = useState<Product[]>(() => INITIAL_PRODUCTS);
-  const [categories, setCategories] = useState<Category[]>(() => INITIAL_CATEGORIES);
-  const [galleryPreview, setGalleryPreview] = useState<GalleryItem[]>(() =>
-    INITIAL_GALLERY.slice(0, 3)
-  );
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [galleryPreview, setGalleryPreview] = useState<GalleryItem[]>([]);
   const [profile, setProfile] = useState<BusinessProfile>(() => INITIAL_BUSINESS_PROFILE);
   const [activeCategorySlug, setActiveCategorySlug] = useState<string>('all');
   const [activeHeroSlide, setActiveHeroSlide] = useState<number>(0);
@@ -34,12 +30,10 @@ export const Home: React.FC = () => {
           getGallery(),
           getBusinessProfile(),
         ]);
-        if (prods.length > 0) {
-          setAllProducts(prods);
-          setFeaturedProducts(prods.filter(p => p.is_featured).slice(0, 4));
-        }
-        if (cats.length > 0) setCategories(cats);
-        if (gals.length > 0) setGalleryPreview(gals.slice(0, 3));
+        setAllProducts(prods);
+        setFeaturedProducts(prods.filter(p => p.is_featured).slice(0, 4));
+        setCategories(cats);
+        setGalleryPreview(gals.slice(0, 3));
         if (prof) setProfile(prof);
       } catch (err) {
         console.warn('Error refreshing home data:', err);
@@ -82,7 +76,23 @@ export const Home: React.FC = () => {
     }
   ];
 
-  const currentHero = heroShowcase[activeHeroSlide];
+  // Hero interactive showcase items - sinkronkan dinamis dengan produk asli jika ada di database
+  const dynamicHeroShowcase = (allProducts.filter(p => p.is_featured && p.image_url).length >= 3
+    ? allProducts.filter(p => p.is_featured && p.image_url)
+    : allProducts.filter(p => p.image_url)
+  ).slice(0, 3).map((p, idx) => ({
+    label: p.name.split(' ').slice(0, 3).join(' '),
+    title: p.name,
+    material: p.material || 'Kayu Solid Pilihan',
+    finish: p.finish || 'Finishing Natural Rapi Halus',
+    price: p.price,
+    slug: p.slug,
+    image: p.image_url || '',
+    badge: idx === 0 ? 'Favorit Home Office' : (idx === 1 ? 'Set Kafe dan Resto' : 'Pilihan Workshop')
+  }));
+
+  const activeHeroItems = dynamicHeroShowcase.length >= 3 ? dynamicHeroShowcase : heroShowcase;
+  const currentHero = activeHeroItems[activeHeroSlide] || activeHeroItems[0];
 
   // Filtered products for curated section
   const displayProducts = activeCategorySlug === 'all'
@@ -158,7 +168,7 @@ export const Home: React.FC = () => {
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-xs bg-[#6f3c16]" />
               <span className="text-[11px] sm:text-xs font-bold tracking-[0.14em] uppercase text-[#6f3c16]">
-                Workshop Pengrajin Kayu & Mebel Custom Tigaraksa
+                Workshop Pengrajin Kayu dan Mebel Custom Tigaraksa
               </span>
             </div>
 
@@ -186,7 +196,7 @@ export const Home: React.FC = () => {
                 to="/kontak"
                 className="py-3 sm:py-3.5 px-6 bg-white hover:bg-[#f6f2ec] text-[#1c1c19] border border-[#ede5d8] hover:border-[#6f3c16]/50 rounded-xl text-xs sm:text-sm font-semibold tracking-wide shadow-xs transition-all text-center"
               >
-                Tanya & Konsultasi Ukuran
+                Tanya dan Konsultasi Ukuran
               </Link>
             </div>
 
@@ -197,7 +207,7 @@ export const Home: React.FC = () => {
                 <span className="text-[11px] text-[#705e52]">Solid utuh, bebas serbuk MDF</span>
               </div>
               <div className="flex flex-col gap-0.5 sm:border-l sm:border-[#ede5d8] sm:pl-3">
-                <span className="font-serif font-bold text-[#1c1c19] text-sm">Amplas & Finishing</span>
+                <span className="font-serif font-bold text-[#1c1c19] text-sm">Amplas dan Finishing</span>
                 <span className="text-[11px] text-[#705e52]">Halus, rapi, dan tahan air</span>
               </div>
               <div className="flex flex-col gap-0.5 sm:border-l sm:border-[#ede5d8] sm:pl-3">
@@ -248,9 +258,9 @@ export const Home: React.FC = () => {
                 Contoh Mebel:
               </span>
               <div className="flex items-center gap-1.5">
-                {heroShowcase.map((item, idx) => (
+                {activeHeroItems.map((item, idx) => (
                   <button
-                    key={item.slug}
+                    key={item.slug || idx}
                     onClick={() => setActiveHeroSlide(idx)}
                     className={`px-3 py-1 text-xs rounded-lg transition-all ${
                       activeHeroSlide === idx
@@ -523,7 +533,7 @@ export const Home: React.FC = () => {
             {mobileCompareTab === 'solid' ? (
               <div className="bg-white p-5 rounded-2xl border border-[#6f3c16]/30 shadow-xs flex flex-col gap-4">
                 <div className="text-xs font-bold text-[#6f3c16]">
-                  100% Kayu Solid Asli (Jati Belanda & Solid)
+                  100% Kayu Solid Asli (Jati Belanda dan Kayu Solid Pilihan)
                 </div>
                 <div className="flex flex-col gap-3 text-xs text-[#1c1c19]">
                   <div>
@@ -588,7 +598,7 @@ export const Home: React.FC = () => {
             {/* Row 1: Bahan Baku */}
             <div className="grid grid-cols-12 border-b border-[#ede5d8] text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Bahan Baku & Kekuatan Struktur
+                Bahan Baku dan Kekuatan Struktur
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 100% kayu solid utuh (Jati Belanda oven / kayu solid pilihan). Padat, kokoh, dan tahan beban berat tanpa melengkung.
@@ -601,7 +611,7 @@ export const Home: React.FC = () => {
             {/* Row 2: Sambungan Konstruksi */}
             <div className="grid grid-cols-12 border-b border-[#ede5d8] text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Konstruksi & Sambungan Kayu
+                Konstruksi dan Sambungan Kayu
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 Sambungan kayu saling kunci yang presisi dan kuat. Mebel tetap kokoh dan tidak goyang walau sering digeser.
@@ -614,7 +624,7 @@ export const Home: React.FC = () => {
             {/* Row 3: Ketahanan Air dan Lembap */}
             <div className="grid grid-cols-12 border-b border-[#ede5d8] text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Ketahanan Air & Kelembapan
+                Ketahanan Air dan Kelembapan
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 Tahan tumpahan air dan udara lembap. Mudah dibersihkan cukup dengan lap basah.
@@ -627,7 +637,7 @@ export const Home: React.FC = () => {
             {/* Row 4: Masa Pakai dan Refinishing */}
             <div className="grid grid-cols-12 text-xs">
               <div className="col-span-4 p-5 font-semibold text-[#1c1c19]">
-                Masa Pakai & Kemudahan Perawatan
+                Masa Pakai dan Kemudahan Perawatan
               </div>
               <div className="col-span-4 p-5 text-[#1c1c19] border-l border-[#ede5d8] bg-[#fdfaf6] leading-relaxed font-medium">
                 Awet bertahun-tahun. Dapat diamplas atau dipernis ulang kapan saja agar kembali tampak seperti baru.
@@ -686,14 +696,14 @@ export const Home: React.FC = () => {
                 </div>
 
                 <p className="text-xs text-[#52443b] italic leading-relaxed">
-                  &ldquo;Banyak pelanggan datang cuma bawa screenshot dari Pinterest atau coretan sederhana di kertas. Dari situ kami diskusikan bareng sampai ukurannya pas di ruangan dan harganya cocok di kantong.&rdquo;
+                  “Banyak pelanggan datang cuma bawa screenshot dari Pinterest atau coretan sederhana di kertas. Dari situ kami diskusikan bareng sampai ukurannya pas di ruangan dan harganya cocok di kantong.”
                 </p>
 
                 <Link
                   to="/kontak"
                   className="w-full py-2.5 px-4 rounded-xl bg-[#faf7f2] hover:bg-[#6f3c16] text-[#1c1c19] hover:text-white border border-[#ede5d8] hover:border-[#6f3c16] text-xs font-semibold flex items-center justify-center transition-all text-center"
                 >
-                  Hubungi & Kunjungi Workshop
+                  Hubungi dan Kunjungi Workshop
                 </Link>
               </div>
             </div>
@@ -711,7 +721,7 @@ export const Home: React.FC = () => {
                   <span className="material-symbols-outlined text-[20px] text-[#8c6b4f]/60 group-hover:text-[#6f3c16] transition-colors">design_services</span>
                 </div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-[#1c1c19]">
-                  Kirim Foto Model & Ukuran
+                  Kirim Foto Model dan Ukuran
                 </h3>
                 <p className="text-xs text-[#52443b] leading-relaxed">
                   Kirimkan foto contoh mebel yang Anda suka dan perkiraan ukuran ruangan. Kami bantu arahkan ukuran yang proporsional dan nyaman dipakai.
@@ -730,7 +740,7 @@ export const Home: React.FC = () => {
                   <span className="material-symbols-outlined text-[20px] text-[#8c6b4f]/60 group-hover:text-[#6f3c16] transition-colors">palette</span>
                 </div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-[#1c1c19]">
-                  Pilih Kayu & Warna Finishing
+                  Pilih Kayu dan Warna Finishing
                 </h3>
                 <p className="text-xs text-[#52443b] leading-relaxed">
                   Pilih bahan utama kayu jati belanda yang estetik atau kayu solid lainnya. Tentukan warna finishing (natural doff, satin, atau walnut). Biaya dihitung jelas di awal.
@@ -787,66 +797,68 @@ export const Home: React.FC = () => {
       {/* ======================================================== */}
       {/* 7. CONTOH HASIL MEBEL DI TEMPAT PELANGGAN                */}
       {/* ======================================================== */}
-      <section className="py-10 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-6 sm:gap-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
-          <div className="flex flex-col gap-1.5 sm:gap-2">
-            <span className="text-xs uppercase tracking-wider text-[#8c6b4f] font-bold">
-              Dokumentasi Proyek
-            </span>
-            <h2 className="font-serif text-2xl sm:text-4xl font-semibold text-[#1c1c19] tracking-tight">
-              Contoh Mebel yang Pernah Kami Kerjakan
-            </h2>
-            <p className="text-xs sm:text-sm text-[#52443b] max-w-xl">
-              Foto asli hasil pengerjaan mebel custom yang sudah terpasang di rumah tinggal, kafe, dan ruang usaha pelanggan kami.
-            </p>
+      {galleryPreview.length > 0 && (
+        <section className="py-10 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-6 sm:gap-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
+            <div className="flex flex-col gap-1.5 sm:gap-2">
+              <span className="text-xs uppercase tracking-wider text-[#8c6b4f] font-bold">
+                Dokumentasi Proyek
+              </span>
+              <h2 className="font-serif text-2xl sm:text-4xl font-semibold text-[#1c1c19] tracking-tight">
+                Contoh Mebel yang Pernah Kami Kerjakan
+              </h2>
+              <p className="text-xs sm:text-sm text-[#52443b] max-w-xl">
+                Foto asli hasil pengerjaan mebel custom yang sudah terpasang di rumah tinggal, kafe, dan ruang usaha pelanggan kami.
+              </p>
+            </div>
+
+            <Link
+              to="/galeri"
+              className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-white border border-[#ede5d8] hover:border-[#6f3c16] text-xs font-semibold text-[#1c1c19] hover:bg-[#faf7f2] transition-colors self-start sm:self-auto shadow-xs"
+            >
+              Lihat Semua Portofolio
+            </Link>
           </div>
 
-          <Link
-            to="/galeri"
-            className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-white border border-[#ede5d8] hover:border-[#6f3c16] text-xs font-semibold text-[#1c1c19] hover:bg-[#faf7f2] transition-colors self-start sm:self-auto shadow-xs"
-          >
-            Lihat Semua Portofolio
-          </Link>
-        </div>
-
-        {/* Gallery Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-          {galleryPreview.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-2xl overflow-hidden border border-[#ede5d8] shadow-[0_4px_20px_rgba(31,36,33,0.04)] flex flex-col group"
-            >
-              <div className="relative aspect-[16/11] overflow-hidden bg-[#ece6dc]">
-                <img
-                  src={item.image_url}
-                  alt={item.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out"
-                />
-                {item.category && (
-                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded bg-[#1c1c19]/85 text-white text-[10px] font-semibold tracking-wide">
-                    {item.category}
-                  </span>
-                )}
-              </div>
-              <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 gap-2.5 sm:gap-3">
-                <div>
-                  <h3 className="font-serif text-sm sm:text-base font-bold text-[#1c1c19]">{item.title}</h3>
-                  <p className="text-xs text-[#52443b] line-clamp-2 mt-1 leading-relaxed">
-                    {item.description}
-                  </p>
+          {/* Gallery Bento Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            {galleryPreview.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white rounded-2xl overflow-hidden border border-[#ede5d8] shadow-[0_4px_20px_rgba(31,36,33,0.04)] flex flex-col group"
+              >
+                <div className="relative aspect-[16/11] overflow-hidden bg-[#ece6dc]">
+                  <img
+                    src={item.image_url}
+                    alt={item.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out"
+                  />
+                  {item.category && (
+                    <span className="absolute top-3 left-3 px-2.5 py-1 rounded bg-[#1c1c19]/85 text-white text-[10px] font-semibold tracking-wide">
+                      {item.category}
+                    </span>
+                  )}
                 </div>
-                {item.location && (
-                  <div className="pt-2 border-t border-[#ede5d8] flex items-center gap-1.5 text-xs text-[#8c6b4f]">
-                    <span className="material-symbols-outlined text-[14px] sm:text-[15px] text-[#6f3c16]">location_on</span>
-                    <span className="text-[11px] sm:text-xs">{item.location}</span>
+                <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 gap-2.5 sm:gap-3">
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base font-bold text-[#1c1c19]">{item.title}</h3>
+                    <p className="text-xs text-[#52443b] line-clamp-2 mt-1 leading-relaxed">
+                      {item.description}
+                    </p>
                   </div>
-                )}
+                  {item.location && (
+                    <div className="pt-2 border-t border-[#ede5d8] flex items-center gap-1.5 text-xs text-[#8c6b4f]">
+                      <span className="material-symbols-outlined text-[14px] sm:text-[15px] text-[#6f3c16]">location_on</span>
+                      <span className="text-[11px] sm:text-xs">{item.location}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ======================================================== */}
       {/* 8. PRE-FOOTER CALLOUT: KUNJUNGAN ATAU JELAJAHI           */}
@@ -870,7 +882,7 @@ export const Home: React.FC = () => {
               to="/kontak"
               className="w-full sm:w-auto px-6 py-3.5 bg-[#faf7f2] hover:bg-white text-[#1c1c19] rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-xs text-center"
             >
-              Lihat Kontak & Lokasi Workshop
+              Lihat Kontak dan Lokasi Workshop
             </Link>
 
             <Link
