@@ -228,12 +228,12 @@ export const AdminLogin: React.FC = () => {
       } else {
         recordFailedAttempt();
         resetTurnstile();
-        setErrorMsg('Email atau kata sandi tidak valid.');
+        setErrorMsg(res.error || 'Email atau kata sandi tidak valid.');
       }
-    } catch {
+    } catch (err: any) {
       recordFailedAttempt();
       resetTurnstile();
-      setErrorMsg('Email atau kata sandi tidak valid.');
+      setErrorMsg(err?.message || 'Email atau kata sandi tidak valid.');
     } finally {
       setLoading(false);
     }

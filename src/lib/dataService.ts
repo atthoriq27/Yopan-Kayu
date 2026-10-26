@@ -778,14 +778,20 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
         if (error.message.toLowerCase().includes('email not confirmed')) {
           return {
             success: false,
-            error: 'Email belum dikonfirmasi. Silakan buka Supabase > Authentication > Users, klik tanda titik tiga di baris user, lalu klik "Confirm user".'
+            error: 'Email belum dikonfirmasi di Supabase. Buka Supabase > Authentication > Users, klik titik tiga (...) di samping user lalu pilih "Confirm user".'
           };
         }
-        return { success: false, error: 'Email atau kata sandi salah.' };
+        if (error.message.toLowerCase().includes('invalid login credentials')) {
+          return {
+            success: false,
+            error: 'Email atau kata sandi salah. Silakan pastikan akun sudah terdaftar di Supabase > Authentication > Users.'
+          };
+        }
+        return { success: false, error: `Login gagal: ${error.message}` };
       }
       return { success: true };
     } catch (err: any) {
-      return { success: false, error: 'Terjadi gangguan koneksi ke Supabase.' };
+      return { success: false, error: 'Terjadi gangguan koneksi ke Supabase: ' + (err?.message || 'Network error') };
     }
   }
 
@@ -798,7 +804,7 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
 
   return {
     success: false,
-    error: 'Database Supabase belum terhubung di file .env lokal Anda. Masukkan VITE_SUPABASE_URL di .env terlebih dahulu.'
+    error: 'Koneksi database Supabase belum terpasang di build website. Pastikan VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY sudah dimasukkan di Cloudflare (Settings > Builds > Build variables).'
   };
 }
 
