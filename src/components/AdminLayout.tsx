@@ -27,6 +27,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isForbidden, setIsForbidden] = useState(false);
   const [has2Fa, setHas2Fa] = useState(true);
+  const [dismiss2FaBanner, setDismiss2FaBanner] = useState(() => {
+    return localStorage.getItem('yk_dismiss_2fa_banner') === 'true';
+  });
   const [adminEmail, setAdminEmail] = useState('');
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -288,25 +291,38 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {/* Main Content Body (Independently scrollable on Desktop) */}
         <main className="flex-1 md:overflow-y-auto p-3 sm:p-6 lg:p-8 min-w-0 w-full box-border">
           <div className="max-w-6xl w-full mx-auto">
-            {/* Persistent 2FA Warning Banner */}
-            {!has2Fa && (
+            {/* 2FA Reminder Banner (Bisa ditutup agar tidak mengganggu) */}
+            {!has2Fa && !dismiss2FaBanner && (
               <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-[24px] text-amber-700 flex-shrink-0">warning</span>
+                  <span className="material-symbols-outlined text-[24px] text-amber-700 flex-shrink-0">shield</span>
                   <div className="flex flex-col">
-                    <span className="font-bold text-xs">Peringatan Keamanan: 2FA Belum Aktif</span>
+                    <span className="font-bold text-xs">Informasi Keamanan: 2FA Opsional</span>
                     <span className="text-[11px] text-amber-800 leading-relaxed">
-                      Akun pengelola belum mengaktifkan Autentikasi Dua Faktor (TOTP). Aktifkan 2FA sekarang di profil Anda demi mencegah pembobolan akun.
+                      Autentikasi dua langkah (2FA) tersedia di menu Profil jika Anda membutuhkan perlindungan akun tambahan.
                     </span>
                   </div>
                 </div>
-                <Link
-                  to="/kelola/profil"
-                  className="px-4 py-2 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold transition-colors whitespace-nowrap self-start sm:self-auto flex items-center gap-1.5 shadow-xs"
-                >
-                  <span>Aktifkan 2FA</span>
-                  <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
-                </Link>
+                <div className="flex items-center gap-2 self-start sm:self-auto flex-shrink-0">
+                  <Link
+                    to="/kelola/profil"
+                    className="px-3.5 py-1.5 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold transition-colors whitespace-nowrap flex items-center gap-1 shadow-xs"
+                  >
+                    <span>Profil</span>
+                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDismiss2FaBanner(true);
+                      localStorage.setItem('yk_dismiss_2fa_banner', 'true');
+                    }}
+                    title="Tutup pemberitahuan ini"
+                    className="p-1.5 rounded-xl text-amber-800 hover:bg-amber-200/50 transition-colors flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">close</span>
+                  </button>
+                </div>
               </div>
             )}
 
