@@ -1,23 +1,16 @@
 -- ==============================================================================
--- PENDAFTARAN ADMIN PERTAMA KE TABEL ADMIN_USERS
+-- DAFTARKAN ADMIN PENGELOLA KE TABEL ADMIN_USERS
 -- Yopan Kayu Management
--- ==============================================================================
---
--- LANGKAH-LANGKAH PENGGUNAAN:
--- 1. Buka Supabase Dashboard (https://supabase.com/dashboard/project/unknmfxhuitptaeytzvf)
--- 2. Buka menu Authentication > Users.
--- 3. Cari baris akun email admin Anda, lalu salin nilai pada kolom 'User UID'
---    (Contoh bentuk User UID: 3a2c4e61-8f90-4d5b-9123-abcdef012345).
--- 4. Ganti teks <GANTI_USER_ID_ADMIN> di bawah dengan User UID tersebut.
--- 5. Jalankan query ini di SQL Editor Supabase.
 -- ==============================================================================
 
 INSERT INTO public.admin_users (user_id, role)
-VALUES ('<GANTI_USER_ID_ADMIN>', 'admin')
-ON CONFLICT (user_id) DO UPDATE
+VALUES 
+  ('3504ffbe-d928-4ad6-969d-33ac2c3a01ed', 'admin'), -- Mang Heri (heryadjah@gmail.com)
+  ('67df00ab-e59f-4b93-ae89-fd2a99ce2284', 'admin')  -- Anda (autoruns27@gmail.com)
+ON CONFLICT (user_id) DO UPDATE 
 SET role = 'admin';
 
--- Verifikasi pendaftaran:
+-- Cek hasil pendaftaran:
 SELECT 
     au.user_id,
     u.email,
