@@ -301,81 +301,88 @@ VALUES
   ('business', 'business', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
--- Storage public read policy
+-- Storage read policy (Restricted to authenticated admin to prevent public enumeration)
+-- Public web display uses direct public URLs without needing SELECT on storage.objects
 DROP POLICY IF EXISTS "Public Access Products Bucket" ON storage.objects;
-CREATE POLICY "Public Access Products Bucket" 
+DROP POLICY IF EXISTS "Admin Select Products Bucket" ON storage.objects;
+CREATE POLICY "Admin Select Products Bucket" 
 ON storage.objects FOR SELECT 
-TO anon, authenticated 
-USING (bucket_id = 'products');
+TO authenticated 
+USING (bucket_id = 'products' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Public Access Gallery Bucket" ON storage.objects;
-CREATE POLICY "Public Access Gallery Bucket" 
+DROP POLICY IF EXISTS "Admin Select Gallery Bucket" ON storage.objects;
+CREATE POLICY "Admin Select Gallery Bucket" 
 ON storage.objects FOR SELECT 
-TO anon, authenticated 
-USING (bucket_id = 'gallery');
+TO authenticated 
+USING (bucket_id = 'gallery' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Public Access Business Bucket" ON storage.objects;
-CREATE POLICY "Public Access Business Bucket" 
+DROP POLICY IF EXISTS "Admin Select Business Bucket" ON storage.objects;
+CREATE POLICY "Admin Select Business Bucket" 
 ON storage.objects FOR SELECT 
-TO anon, authenticated 
-USING (bucket_id = 'business');
+TO authenticated 
+USING (bucket_id = 'business' AND public.is_admin());
 
 -- Storage admin upload/insert policy
 DROP POLICY IF EXISTS "Admin Upload Products Bucket" ON storage.objects;
 CREATE POLICY "Admin Upload Products Bucket" 
 ON storage.objects FOR INSERT 
 TO authenticated 
-WITH CHECK (bucket_id = 'products');
+WITH CHECK (bucket_id = 'products' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Admin Upload Gallery Bucket" ON storage.objects;
 CREATE POLICY "Admin Upload Gallery Bucket" 
 ON storage.objects FOR INSERT 
 TO authenticated 
-WITH CHECK (bucket_id = 'gallery');
+WITH CHECK (bucket_id = 'gallery' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Admin Upload Business Bucket" ON storage.objects;
 CREATE POLICY "Admin Upload Business Bucket" 
 ON storage.objects FOR INSERT 
 TO authenticated 
-WITH CHECK (bucket_id = 'business');
+WITH CHECK (bucket_id = 'business' AND public.is_admin());
 
 -- Storage admin update policy
 DROP POLICY IF EXISTS "Admin Update Products Bucket" ON storage.objects;
 CREATE POLICY "Admin Update Products Bucket" 
 ON storage.objects FOR UPDATE 
 TO authenticated 
-USING (bucket_id = 'products');
+USING (bucket_id = 'products' AND public.is_admin())
+WITH CHECK (bucket_id = 'products' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Admin Update Gallery Bucket" ON storage.objects;
 CREATE POLICY "Admin Update Gallery Bucket" 
 ON storage.objects FOR UPDATE 
 TO authenticated 
-USING (bucket_id = 'gallery');
+USING (bucket_id = 'gallery' AND public.is_admin())
+WITH CHECK (bucket_id = 'gallery' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Admin Update Business Bucket" ON storage.objects;
 CREATE POLICY "Admin Update Business Bucket" 
 ON storage.objects FOR UPDATE 
 TO authenticated 
-USING (bucket_id = 'business');
+USING (bucket_id = 'business' AND public.is_admin())
+WITH CHECK (bucket_id = 'business' AND public.is_admin());
 
 -- Storage admin delete policy
 DROP POLICY IF EXISTS "Admin Delete Products Bucket" ON storage.objects;
 CREATE POLICY "Admin Delete Products Bucket" 
 ON storage.objects FOR DELETE 
 TO authenticated 
-USING (bucket_id = 'products');
+USING (bucket_id = 'products' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Admin Delete Gallery Bucket" ON storage.objects;
 CREATE POLICY "Admin Delete Gallery Bucket" 
 ON storage.objects FOR DELETE 
 TO authenticated 
-USING (bucket_id = 'gallery');
+USING (bucket_id = 'gallery' AND public.is_admin());
 
 DROP POLICY IF EXISTS "Admin Delete Business Bucket" ON storage.objects;
 CREATE POLICY "Admin Delete Business Bucket" 
 ON storage.objects FOR DELETE 
 TO authenticated 
-USING (bucket_id = 'business');
+USING (bucket_id = 'business' AND public.is_admin());
 
 -- ===================================================
 -- SEED INITIAL DATA
