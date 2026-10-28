@@ -5,7 +5,12 @@ import {
   updateBusinessProfile,
   uploadImage,
   getAdminSession,
-  changeAdminPassword
+  changeAdminPassword,
+  validatePasswordPolicy,
+  listMfaFactors,
+  enrollMfaTotp,
+  challengeAndVerifyMfa,
+  unenrollMfa
 } from '../../lib/dataService';
 import { BusinessProfile } from '../../types';
 import {
@@ -55,17 +60,30 @@ export const AdminProfile: React.FC = () => {
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  // MFA / 2FA States
+  const [mfaFactors, setMfaFactors] = useState<any[]>([]);
+  const [loadingMfa, setLoadingMfa] = useState(false);
+  const [enrollingMfa, setEnrollingMfa] = useState(false);
+  const [mfaEnrollData, setMfaEnrollData] = useState<{ id: string; qr_code: string; secret: string; uri: string } | null>(null);
+  const [mfaVerifyCode, setMfaVerifyCode] = useState('');
+  const [mfaError, setMfaError] = useState('');
+  const [mfaSuccess, setMfaSuccess] = useState('');
+  const [actionLoadingMfa, setActionLoadingMfa] = useState(false);
+  const [copiedSecret, setCopiedSecret] = useState(false);
+
   useEffect(() => {
     async function load() {
       try {
-        const [data, session] = await Promise.all([
+        const [data, session, factors] = await Promise.all([
           getBusinessProfile(),
-          getAdminSession()
+          getAdminSession(),
+          listMfaFactors()
         ]);
         setProfile(data);
         if (session && session.email) {
           setAdminEmail(session.email);
         }
+        setMfaFactors(factors.totp || []);
         setBusinessName(data.business_name || '');
         setTagline(data.tagline || '');
         setDescription(data.description || '');
@@ -169,6 +187,8 @@ export const AdminProfile: React.FC = () => {
     }
   };
 
+  const passwordValidation = validatePasswordPolicy(newPassword);
+
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setPasswordError('');
@@ -186,10 +206,12 @@ export const AdminProfile: React.FC = () => {
       setPasswordError('Silakan masukkan kata sandi baru.');
       return;
     }
-    if (cleanNew.length < 6) {
-      setPasswordError('Kata sandi baru minimal 6 karakter.');
+
+    if (!passwordValidation.isValid) {
+      setPasswordError(passwordValidation.errors.join(' '));
       return;
     }
+
     if (cleanNew !== cleanConfirm) {
       setPasswordError('Konfirmasi kata sandi baru tidak cocok. Periksa kembali pengetikan Anda.');
       return;
@@ -203,7 +225,7 @@ export const AdminProfile: React.FC = () => {
     try {
       const res = await changeAdminPassword(cleanCurrent, cleanNew);
       if (res.success) {
-        setPasswordSuccess('✓ Kata sandi berhasil diperbarui! Silakan gunakan kata sandi baru ini untuk login berikutnya.');
+        setPasswordSuccess('✓ Kata sandi berhasil diperbarui dengan standar keamanan NIST (14+ karakter)!');
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
@@ -215,6 +237,90 @@ export const AdminProfile: React.FC = () => {
     } finally {
       setChangingPassword(false);
     }
+  };
+
+  const refreshMfaFactors = async () => {
+    setLoadingMfa(true);
+    try {
+      const factors = await listMfaFactors();
+      setMfaFactors(factors.totp || []);
+    } finally {
+      setLoadingMfa(false);
+    }
+  };
+
+  const handleStartEnrollMfa = async () => {
+    setActionLoadingMfa(true);
+    setMfaError('');
+    setMfaSuccess('');
+    try {
+      const res = await enrollMfaTotp();
+      if (res.error) {
+        setMfaError(res.error);
+      } else if (res.data) {
+        setMfaEnrollData({
+          id: res.data.id,
+          qr_code: res.data.totp.qr_code,
+          secret: res.data.totp.secret,
+          uri: res.data.totp.uri
+        });
+        setEnrollingMfa(true);
+      }
+    } finally {
+      setActionLoadingMfa(false);
+    }
+  };
+
+  const handleVerifyEnrollMfa = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mfaEnrollData) return;
+    const cleanCode = mfaVerifyCode.trim().replace(/\s/g, '');
+    if (cleanCode.length !== 6 || !/^\d{6}$/.test(cleanCode)) {
+      setMfaError('Kode verifikasi harus berupa 6 digit angka.');
+      return;
+    }
+    setActionLoadingMfa(true);
+    setMfaError('');
+    try {
+      const res = await challengeAndVerifyMfa(mfaEnrollData.id, cleanCode);
+      if (res.success) {
+        setMfaSuccess('✓ Autentikasi Dua Faktor (2FA) berhasil diaktifkan untuk akun Anda!');
+        setEnrollingMfa(false);
+        setMfaEnrollData(null);
+        setMfaVerifyCode('');
+        await refreshMfaFactors();
+      } else {
+        setMfaError(res.error || 'Kode verifikasi tidak cocok. Periksa jam perangkat Anda.');
+      }
+    } finally {
+      setActionLoadingMfa(false);
+    }
+  };
+
+  const handleUnenrollMfa = async (factorId: string) => {
+    if (!window.confirm('Apakah Anda yakin ingin menonaktifkan Autentikasi Dua Faktor (2FA)? Akun Anda akan menjadi kurang terlindungi.')) {
+      return;
+    }
+    setActionLoadingMfa(true);
+    setMfaError('');
+    setMfaSuccess('');
+    try {
+      const res = await unenrollMfa(factorId);
+      if (res.success) {
+        setMfaSuccess('Autentikasi Dua Faktor (2FA) berhasil dinonaktifkan.');
+        await refreshMfaFactors();
+      } else {
+        setMfaError(res.error || 'Gagal menonaktifkan 2FA.');
+      }
+    } finally {
+      setActionLoadingMfa(false);
+    }
+  };
+
+  const handleCopySecret = (secretText: string) => {
+    navigator.clipboard.writeText(secretText);
+    setCopiedSecret(true);
+    setTimeout(() => setCopiedSecret(false), 2000);
   };
 
   if (loading) {
@@ -660,14 +766,14 @@ export const AdminProfile: React.FC = () => {
           </div>
 
           {/* Password Baru */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 sm:col-span-2">
             <label className="font-bold text-[#1c1c19]">Kata Sandi Baru *</label>
             <div className="relative">
               <input
                 type={showNewPassword ? 'text' : 'password'}
                 required
                 autoComplete="new-password"
-                placeholder="Minimal 6 karakter"
+                placeholder="Minimal 14 karakter (kombinasi huruf, angka & simbol)"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full px-4 py-2.5 pr-11 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
@@ -683,10 +789,82 @@ export const AdminProfile: React.FC = () => {
                 </span>
               </button>
             </div>
+
+            {/* Real-time Password Strength Meter */}
+            {newPassword.length > 0 && (
+              <div className="mt-2 p-3.5 bg-[#faf7f2] border border-[#ede5d8] rounded-xl flex flex-col gap-2.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-[#52443b]">Kekuatan Kata Sandi:</span>
+                  <span className={`font-bold ${
+                    passwordValidation.score <= 1 ? 'text-red-600' :
+                    passwordValidation.score === 2 ? 'text-amber-600' :
+                    passwordValidation.score === 3 ? 'text-yellow-600' : 'text-emerald-700'
+                  }`}>
+                    {passwordValidation.score <= 1 ? 'Sangat Lemah' :
+                     passwordValidation.score === 2 ? 'Lemah' :
+                     passwordValidation.score === 3 ? 'Cukup Kuat' : 'Sangat Kuat & Memenuhi Standar'}
+                  </span>
+                </div>
+
+                {/* 4-bar progress indicator */}
+                <div className="grid grid-cols-4 gap-1.5 h-1.5 w-full">
+                  <div className={`rounded-full transition-colors ${
+                    passwordValidation.score >= 1 ? (passwordValidation.score === 1 ? 'bg-red-500' : passwordValidation.score === 2 ? 'bg-amber-500' : passwordValidation.score === 3 ? 'bg-yellow-500' : 'bg-emerald-600') : 'bg-gray-200'
+                  }`} />
+                  <div className={`rounded-full transition-colors ${
+                    passwordValidation.score >= 2 ? (passwordValidation.score === 2 ? 'bg-amber-500' : passwordValidation.score === 3 ? 'bg-yellow-500' : 'bg-emerald-600') : 'bg-gray-200'
+                  }`} />
+                  <div className={`rounded-full transition-colors ${
+                    passwordValidation.score >= 3 ? (passwordValidation.score === 3 ? 'bg-yellow-500' : 'bg-emerald-600') : 'bg-gray-200'
+                  }`} />
+                  <div className={`rounded-full transition-colors ${
+                    passwordValidation.score >= 4 ? 'bg-emerald-600' : 'bg-gray-200'
+                  }`} />
+                </div>
+
+                {/* Requirements Checklist */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-[11px]">
+                  <div className={`flex items-center gap-1.5 ${passwordValidation.checks.minLength ? 'text-emerald-700 font-medium' : 'text-[#85746a]'}`}>
+                    <span className="material-symbols-outlined text-[15px]">
+                      {passwordValidation.checks.minLength ? 'check_circle' : 'radio_button_unchecked'}
+                    </span>
+                    <span>Minimal 14 karakter</span>
+                  </div>
+
+                  <div className={`flex items-center gap-1.5 ${passwordValidation.checks.hasUpper && passwordValidation.checks.hasLower ? 'text-emerald-700 font-medium' : 'text-[#85746a]'}`}>
+                    <span className="material-symbols-outlined text-[15px]">
+                      {passwordValidation.checks.hasUpper && passwordValidation.checks.hasLower ? 'check_circle' : 'radio_button_unchecked'}
+                    </span>
+                    <span>Huruf besar (A-Z) & kecil (a-z)</span>
+                  </div>
+
+                  <div className={`flex items-center gap-1.5 ${passwordValidation.checks.hasNumber ? 'text-emerald-700 font-medium' : 'text-[#85746a]'}`}>
+                    <span className="material-symbols-outlined text-[15px]">
+                      {passwordValidation.checks.hasNumber ? 'check_circle' : 'radio_button_unchecked'}
+                    </span>
+                    <span>Minimal 1 angka (0-9)</span>
+                  </div>
+
+                  <div className={`flex items-center gap-1.5 ${passwordValidation.checks.hasSymbol ? 'text-emerald-700 font-medium' : 'text-[#85746a]'}`}>
+                    <span className="material-symbols-outlined text-[15px]">
+                      {passwordValidation.checks.hasSymbol ? 'check_circle' : 'radio_button_unchecked'}
+                    </span>
+                    <span>Simbol khusus (!@#$%^&* dll)</span>
+                  </div>
+
+                  <div className={`flex items-center gap-1.5 sm:col-span-2 ${passwordValidation.checks.noBlacklist ? 'text-emerald-700 font-medium' : 'text-red-600 font-semibold'}`}>
+                    <span className="material-symbols-outlined text-[15px]">
+                      {passwordValidation.checks.noBlacklist ? 'check_circle' : 'cancel'}
+                    </span>
+                    <span>Bebas nama brand/domain (yopan, kayu, admin, dll.)</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Konfirmasi Password Baru */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 sm:col-span-2">
             <label className="font-bold text-[#1c1c19]">Konfirmasi Kata Sandi Baru *</label>
             <div className="relative">
               <input
@@ -709,13 +887,18 @@ export const AdminProfile: React.FC = () => {
                 </span>
               </button>
             </div>
+            {confirmPassword && newPassword !== confirmPassword && (
+              <span className="text-[11px] text-red-600 font-medium mt-0.5">
+                Konfirmasi kata sandi belum sama persis.
+              </span>
+            )}
           </div>
 
         </div>
 
         <div className="pt-4 border-t border-[#ede5d8] flex items-center justify-between gap-4">
           <span className="text-[11px] text-[#85746a] hidden sm:inline">
-            Gunakan kombinasi huruf dan angka agar kata sandi kuat dan tidak mudah ditebak.
+            Gunakan kombinasi huruf, angka, dan simbol agar kata sandi kuat dan tidak mudah ditebak.
           </span>
           <button
             type="submit"
@@ -728,6 +911,222 @@ export const AdminProfile: React.FC = () => {
         </div>
 
       </form>
+
+      {/* ======================================================== */}
+      {/* AUTENTIKASI DUA FAKTOR (MFA / 2FA TOTP)                  */}
+      {/* ======================================================== */}
+      <div className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#ede5d8] shadow-warm-sm flex flex-col gap-6 w-full min-w-0 box-border overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#ede5d8] pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#faf7f2] border border-[#ede5d8] flex items-center justify-center text-[#6f3c16] flex-shrink-0 shadow-xs">
+              <span className="material-symbols-outlined text-[22px]">security</span>
+            </div>
+            <div>
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c19]">
+                Autentikasi Dua Faktor (2FA / TOTP)
+              </h2>
+              <p className="text-xs text-[#52443b]">
+                Amankan akun admin dengan kode dinamis 6-digit dari aplikasi Google Authenticator, Authy, atau 1Password.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {mfaFactors.length > 0 ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                <span>2FA Aktif</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-800">
+                <span className="w-2 h-2 rounded-full bg-amber-600"></span>
+                <span>2FA Belum Aktif</span>
+              </span>
+            )}
+          </div>
+        </div>
+
+        {mfaSuccess && (
+          <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2">
+            <span className="material-symbols-outlined text-[20px] text-emerald-700">check_circle</span>
+            <span className="font-medium">{mfaSuccess}</span>
+          </div>
+        )}
+
+        {mfaError && (
+          <div className="p-4 bg-red-50 border border-red-200 text-red-800 text-xs rounded-xl flex items-center gap-2">
+            <span className="material-symbols-outlined text-[20px] text-red-600">error</span>
+            <span className="font-medium">{mfaError}</span>
+          </div>
+        )}
+
+        {/* Active Factors List */}
+        {mfaFactors.length > 0 && !enrollingMfa && (
+          <div className="flex flex-col gap-3">
+            <div className="p-4 rounded-2xl bg-[#faf7f2] border border-[#ede5d8] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-white border border-[#ede5d8] flex items-center justify-center text-emerald-700 shadow-xs">
+                  <span className="material-symbols-outlined text-[20px]">verified_user</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-[#1c1c19]">Faktor TOTP Authenticator</span>
+                  <span className="text-[11px] text-[#52443b]">
+                    Status: Terverifikasi • Didaftarkan: {new Date(mfaFactors[0].created_at).toLocaleDateString('id-ID')}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                disabled={actionLoadingMfa}
+                onClick={() => handleUnenrollMfa(mfaFactors[0].id)}
+                className="px-4 py-2 rounded-xl bg-white hover:bg-red-50 text-red-700 border border-red-200 text-xs font-semibold transition-colors disabled:opacity-50 self-start sm:self-auto flex items-center gap-1.5 shadow-xs"
+              >
+                <span className="material-symbols-outlined text-[16px]">delete</span>
+                <span>Nonaktifkan 2FA</span>
+              </button>
+            </div>
+            <p className="text-[11px] text-[#85746a]">
+              Setiap kali Anda masuk ke panel admin, sistem akan meminta 6 digit kode dari aplikasi authenticator Anda setelah kata sandi diverifikasi.
+            </p>
+          </div>
+        )}
+
+        {/* Enrollment Wizard Form */}
+        {enrollingMfa && mfaEnrollData && (
+          <form onSubmit={handleVerifyEnrollMfa} className="p-5 sm:p-6 rounded-2xl bg-[#faf7f2] border border-[#ede5d8] flex flex-col gap-5">
+            <div className="flex items-center justify-between border-b border-[#ede5d8] pb-3">
+              <h3 className="font-serif text-base font-bold text-[#1c1c19]">
+                Pendaftaran Authenticator (2FA)
+              </h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setEnrollingMfa(false);
+                  setMfaEnrollData(null);
+                  setMfaVerifyCode('');
+                  setMfaError('');
+                }}
+                className="text-xs text-[#85746a] hover:text-[#1c1c19]"
+              >
+                Tutup
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              {/* QR Code Container */}
+              <div className="md:col-span-5 flex flex-col items-center text-center gap-2">
+                <div className="bg-white p-3 rounded-2xl border border-[#ede5d8] shadow-sm flex items-center justify-center">
+                  {mfaEnrollData.qr_code.startsWith('<svg') ? (
+                    <div
+                      className="w-44 h-44 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"
+                      dangerouslySetInnerHTML={{ __html: mfaEnrollData.qr_code }}
+                    />
+                  ) : (
+                    <img
+                      src={mfaEnrollData.qr_code}
+                      alt="QR Code 2FA"
+                      className="w-44 h-44 object-contain"
+                    />
+                  )}
+                </div>
+                <span className="text-[11px] text-[#85746a]">
+                  Pindai QR ini di aplikasi Google Authenticator / Authy
+                </span>
+              </div>
+
+              {/* Instructions and Manual Code */}
+              <div className="md:col-span-7 flex flex-col gap-4 text-xs">
+                <div className="flex flex-col gap-1.5">
+                  <span className="font-bold text-[#1c1c19]">Kunci Rahasia Manual (Jika tidak bisa scan QR):</span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value={mfaEnrollData.secret}
+                      className="w-full px-3 py-2 bg-white border border-[#ede5d8] rounded-xl font-mono text-xs font-bold tracking-widest text-[#1c1c19]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleCopySecret(mfaEnrollData.secret)}
+                      className="px-3 py-2 rounded-xl bg-white hover:bg-[#f5efe6] border border-[#ede5d8] text-[#52443b] text-xs font-semibold flex items-center gap-1 flex-shrink-0 shadow-xs transition-colors"
+                      title="Salin kunci rahasia"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">
+                        {copiedSecret ? 'done' : 'content_copy'}
+                      </span>
+                      <span>{copiedSecret ? 'Tersalin' : 'Salin'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5 pt-2">
+                  <label className="font-bold text-[#1c1c19]">
+                    Masukkan 6 Digit Kode dari Aplikasi untuk Konfirmasi:
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    required
+                    autoFocus
+                    placeholder="000000"
+                    value={mfaVerifyCode}
+                    onChange={(e) => setMfaVerifyCode(e.target.value.replace(/\D/g, ''))}
+                    className="w-full px-4 py-2.5 bg-white border border-[#ede5d8] rounded-xl font-mono text-lg tracking-[0.3em] text-center focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19]"
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={actionLoadingMfa || mfaVerifyCode.trim().length !== 6}
+                    className="px-5 py-2.5 rounded-xl bg-[#1c1c19] hover:bg-[#6f3c16] text-white text-xs font-bold shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-[17px]">verified</span>
+                    <span>{actionLoadingMfa ? 'Memverifikasi...' : 'Verifikasi & Aktifkan 2FA'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEnrollingMfa(false);
+                      setMfaEnrollData(null);
+                      setMfaVerifyCode('');
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-white hover:bg-[#faf7f2] text-[#52443b] border border-[#ede5d8] text-xs font-semibold transition-colors"
+                  >
+                    Batal
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {/* Enable 2FA CTA Button when not enrolled */}
+        {mfaFactors.length === 0 && !enrollingMfa && (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#faf7f2] border border-[#ede5d8]">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-xs font-bold text-[#1c1c19]">Lindungi Akun Pengelola</span>
+              <p className="text-[11px] text-[#52443b] leading-relaxed max-w-md">
+                Autentikasi Dua Faktor (2FA) mencegah pihak tak berwenang masuk ke website meskipun mereka mengetahui kata sandi Anda.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              disabled={actionLoadingMfa}
+              onClick={handleStartEnrollMfa}
+              className="px-5 py-2.5 rounded-xl bg-[#6f3c16] hover:bg-[#5a2f10] text-white text-xs font-bold shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2 self-start sm:self-auto flex-shrink-0"
+            >
+              <span className="material-symbols-outlined text-[18px]">add_moderator</span>
+              <span>{actionLoadingMfa ? 'Menyiapkan...' : 'Aktifkan 2FA Sekarang'}</span>
+            </button>
+          </div>
+        )}
+
+      </div>
     </div>
   </AdminLayout>
 );

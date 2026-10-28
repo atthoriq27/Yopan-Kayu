@@ -12,6 +12,7 @@ import { ProductDetail } from './pages/ProductDetail';
 import { Gallery } from './pages/Gallery';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
+import { NotFound } from './pages/NotFound';
 
 // Admin CMS Pages
 import { AdminLogin } from './pages/admin/AdminLogin';
@@ -69,7 +70,7 @@ export const App: React.FC = () => {
           <Route path="/galeri" element={<Gallery />} />
           <Route path="/tentang" element={<About />} />
           <Route path="/kontak" element={<Contact />} />
-          <Route path="*" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Pengelola CMS Routes (Accessible exclusively via /kelola) */}

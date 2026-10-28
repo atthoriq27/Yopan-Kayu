@@ -78,15 +78,52 @@ ALTER TABLE public.business_profile ADD COLUMN IF NOT EXISTS about_badge_text VA
 ALTER TABLE public.business_profile ADD COLUMN IF NOT EXISTS about_title VARCHAR(255) DEFAULT 'Pembuatan dan Penyediaan Produk Mebel Berkualitas';
 ALTER TABLE public.business_profile ADD COLUMN IF NOT EXISTS about_story TEXT;
 
+-- 6. Table: admin_users (Role separation: references auth.users)
+CREATE TABLE IF NOT EXISTS public.admin_users (
+    user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    role VARCHAR(50) DEFAULT 'admin' NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- ===================================================
--- ROW LEVEL SECURITY (RLS)
+-- ROW LEVEL SECURITY (RLS) & HELPER FUNCTIONS
 -- ===================================================
 
+ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.product_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.business_profile ENABLE ROW LEVEL SECURITY;
+
+-- Helper Function: is_admin()
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()
+    );
+$$;
+
+-- Admin Users Table RLS:
+REVOKE ALL ON public.admin_users FROM anon;
+
+DROP POLICY IF EXISTS "Users can check their own admin status" ON public.admin_users;
+CREATE POLICY "Users can check their own admin status"
+ON public.admin_users FOR SELECT
+TO authenticated
+USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()));
+
+DROP POLICY IF EXISTS "Admins can manage admin_users" ON public.admin_users;
+CREATE POLICY "Admins can manage admin_users"
+ON public.admin_users FOR ALL
+TO authenticated
+USING (EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()))
+WITH CHECK (EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()));
 
 -- Categories RLS:
 DROP POLICY IF EXISTS "Public can view categories" ON public.categories;
@@ -117,8 +154,8 @@ DROP POLICY IF EXISTS "Admin can manage categories" ON public.categories;
 CREATE POLICY "Admin can manage categories" 
 ON public.categories FOR ALL 
 TO authenticated 
-USING (true) 
-WITH CHECK (true);
+USING (public.is_admin()) 
+WITH CHECK (public.is_admin());
 
 -- Products RLS:
 DROP POLICY IF EXISTS "Public can view active products" ON public.products;
@@ -149,14 +186,14 @@ DROP POLICY IF EXISTS "Admin can view all products" ON public.products;
 CREATE POLICY "Admin can view all products" 
 ON public.products FOR SELECT 
 TO authenticated 
-USING (true);
+USING (public.is_admin() OR is_active = true);
 
 DROP POLICY IF EXISTS "Admin can manage products" ON public.products;
 CREATE POLICY "Admin can manage products" 
 ON public.products FOR ALL 
 TO authenticated 
-USING (true) 
-WITH CHECK (true);
+USING (public.is_admin()) 
+WITH CHECK (public.is_admin());
 
 -- Product Images RLS:
 DROP POLICY IF EXISTS "Public can view product images" ON public.product_images;
@@ -187,8 +224,8 @@ DROP POLICY IF EXISTS "Admin can manage product images" ON public.product_images
 CREATE POLICY "Admin can manage product images" 
 ON public.product_images FOR ALL 
 TO authenticated 
-USING (true) 
-WITH CHECK (true);
+USING (public.is_admin()) 
+WITH CHECK (public.is_admin());
 
 -- Gallery RLS:
 DROP POLICY IF EXISTS "Public can view gallery" ON public.gallery;
@@ -219,8 +256,8 @@ DROP POLICY IF EXISTS "Admin can manage gallery" ON public.gallery;
 CREATE POLICY "Admin can manage gallery" 
 ON public.gallery FOR ALL 
 TO authenticated 
-USING (true) 
-WITH CHECK (true);
+USING (public.is_admin()) 
+WITH CHECK (public.is_admin());
 
 -- Business Profile RLS:
 DROP POLICY IF EXISTS "Public can view business profile" ON public.business_profile;
@@ -251,8 +288,8 @@ DROP POLICY IF EXISTS "Admin can update business profile" ON public.business_pro
 CREATE POLICY "Admin can update business profile" 
 ON public.business_profile FOR ALL 
 TO authenticated 
-USING (true) 
-WITH CHECK (true);
+USING (public.is_admin()) 
+WITH CHECK (public.is_admin());
 
 -- ===================================================
 -- STORAGE BUCKETS CONFIGURATION

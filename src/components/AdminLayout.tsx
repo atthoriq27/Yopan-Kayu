@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { getAdminSession, logoutAdmin, getBusinessProfile, PROFILE_UPDATED_EVENT } from '../lib/dataService';
+import {
+  getAdminSession,
+  logoutAdmin,
+  getBusinessProfile,
+  PROFILE_UPDATED_EVENT,
+  checkIsAdmin,
+  listMfaFactors
+} from '../lib/dataService';
 import { BusinessProfile } from '../types';
 import { isSupabaseConfigured } from '../lib/supabase';
 
@@ -18,6 +25,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   actionButton,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isForbidden, setIsForbidden] = useState(false);
+  const [has2Fa, setHas2Fa] = useState(true);
   const [adminEmail, setAdminEmail] = useState('');
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -25,14 +34,31 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAdminSession().then((session) => {
-      if (!session.isLoggedIn) {
+    async function verifyAuthAndRole() {
+      const session = await getAdminSession();
+      if (!session.isLoggedIn || !session.user) {
         navigate('/kelola/login', { replace: true });
-      } else {
-        setAdminEmail(session.email || 'admin@yopankayu.com');
-        setIsLoading(false);
+        return;
       }
-    });
+
+      setAdminEmail(session.email || '');
+
+      // Check whether user belongs to admin_users table
+      const isAdmin = await checkIsAdmin(session.user.id);
+      if (!isAdmin) {
+        setIsForbidden(true);
+        setIsLoading(false);
+        return;
+      }
+
+      // Check MFA TOTP enrollment status
+      const factors = await listMfaFactors();
+      setHas2Fa((factors.totp && factors.totp.length > 0) || false);
+
+      setIsLoading(false);
+    }
+
+    verifyAuthAndRole();
 
     getBusinessProfile().then(setProfile);
 
@@ -58,7 +84,35 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       <div className="min-h-screen bg-[#faf7f2] flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-[#6f3c16] border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-sm font-semibold text-[#52443b]">Memuat Panel Pengelola...</span>
+          <span className="text-sm font-semibold text-[#52443b]">Memverifikasi Otorisasi Pengelola...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (isForbidden) {
+    return (
+      <div className="min-h-screen bg-[#faf7f2] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white p-6 sm:p-8 rounded-3xl border border-[#ede5d8] shadow-warm-md flex flex-col items-center text-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-700 flex items-center justify-center border border-red-200">
+            <span className="material-symbols-outlined text-[32px]">block</span>
+          </div>
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1c1c19]">
+            Akses Ditolak (403 Forbidden)
+          </h2>
+          <p className="text-xs sm:text-sm text-[#52443b] leading-relaxed">
+            Akun <strong>{adminEmail}</strong> berhasil terautentikasi, namun akun ini <strong>bukan pengelola terdaftar</strong> di tabel <code className="px-1.5 py-0.5 bg-gray-100 rounded text-red-700 font-mono text-xs">admin_users</code>.
+          </p>
+          <div className="w-full p-3 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-900 text-left leading-relaxed">
+            💡 <strong>Langkah untuk Pemilik Website:</strong> Jalankan skrip <code className="font-mono font-bold">supabase/register_first_admin.sql</code> di Supabase SQL Editor dengan User UID akun Anda untuk memberikan hak akses admin.
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full py-2.5 rounded-xl bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+          >
+            <span className="material-symbols-outlined text-[18px]">logout</span>
+            <span>Keluar / Ganti Akun</span>
+          </button>
         </div>
       </div>
     );
@@ -234,6 +288,28 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {/* Main Content Body (Independently scrollable on Desktop) */}
         <main className="flex-1 md:overflow-y-auto p-3 sm:p-6 lg:p-8 min-w-0 w-full box-border">
           <div className="max-w-6xl w-full mx-auto">
+            {/* Persistent 2FA Warning Banner */}
+            {!has2Fa && (
+              <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-[24px] text-amber-700 flex-shrink-0">warning</span>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-xs">Peringatan Keamanan: 2FA Belum Aktif</span>
+                    <span className="text-[11px] text-amber-800 leading-relaxed">
+                      Akun pengelola belum mengaktifkan Autentikasi Dua Faktor (TOTP). Aktifkan 2FA sekarang di profil Anda demi mencegah pembobolan akun.
+                    </span>
+                  </div>
+                </div>
+                <Link
+                  to="/kelola/profil"
+                  className="px-4 py-2 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold transition-colors whitespace-nowrap self-start sm:self-auto flex items-center gap-1.5 shadow-xs"
+                >
+                  <span>Aktifkan 2FA</span>
+                  <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                </Link>
+              </div>
+            )}
+
             {children}
           </div>
         </main>

@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginAdmin, getAdminSession, getBusinessProfile } from '../../lib/dataService';
+import {
+  loginAdmin,
+  getAdminSession,
+  getBusinessProfile,
+  getMfaAssuranceLevel,
+  listMfaFactors,
+  challengeAndVerifyMfa
+} from '../../lib/dataService';
 import { BusinessProfile } from '../../types';
 import { isSupabaseConfigured } from '../../lib/supabase';
 
@@ -42,6 +49,12 @@ export const AdminLogin: React.FC = () => {
   const [turnstileToken, setTurnstileToken] = useState<string>('');
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const turnstileWidgetId = useRef<string | null>(null);
+
+  // MFA 2FA State
+  const [mfaStep, setMfaStep] = useState(false);
+  const [totpCode, setTotpCode] = useState('');
+  const [mfaFactorId, setMfaFactorId] = useState('');
+  const [mfaLoading, setMfaLoading] = useState(false);
   
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const navigate = useNavigate();
@@ -221,8 +234,23 @@ export const AdminLogin: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await loginAdmin(sanitizedEmail, sanitizedPassword);
+      // Forward Turnstile token to Supabase Auth
+      const res = await loginAdmin(sanitizedEmail, sanitizedPassword, turnstileToken || undefined);
       if (res.success) {
+        // Check if user has active MFA / 2FA factor (TOTP)
+        const mfaLevel = await getMfaAssuranceLevel();
+        if (mfaLevel.nextLevel === 'aal2' && mfaLevel.currentLevel === 'aal1') {
+          const factors = await listMfaFactors();
+          const activeTotp = factors.totp?.find((f: any) => f.status === 'verified') || factors.totp?.[0];
+          if (activeTotp) {
+            setMfaFactorId(activeTotp.id);
+            setMfaStep(true);
+            setErrorMsg('');
+            setLoading(false);
+            return;
+          }
+        }
+
         resetFailedAttempts();
         navigate('/kelola', { replace: true });
       } else {
@@ -236,6 +264,34 @@ export const AdminLogin: React.FC = () => {
       setErrorMsg(err?.message || 'Email atau kata sandi tidak valid.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleMfaSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg('');
+
+    const cleanCode = totpCode.trim().replace(/\s/g, '');
+    if (cleanCode.length !== 6 || !/^\d{6}$/.test(cleanCode)) {
+      setErrorMsg('Masukkan 6 digit angka kode verifikasi dari aplikasi authenticator.');
+      return;
+    }
+
+    setMfaLoading(true);
+    try {
+      const res = await challengeAndVerifyMfa(mfaFactorId, cleanCode);
+      if (res.success) {
+        resetFailedAttempts();
+        navigate('/kelola', { replace: true });
+      } else {
+        recordFailedAttempt();
+        setErrorMsg(res.error || 'Kode verifikasi 2FA tidak valid atau sudah kedaluwarsa.');
+      }
+    } catch (err: any) {
+      recordFailedAttempt();
+      setErrorMsg(err?.message || 'Gagal memverifikasi kode 2FA.');
+    } finally {
+      setMfaLoading(false);
     }
   };
 
@@ -289,72 +345,138 @@ export const AdminLogin: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-xs sm:text-sm">
-            <div className="flex flex-col gap-1.5">
-              <label className="font-bold text-[#1c1c19] text-xs">Email Pengelola</label>
-              <input
-                type="email"
-                required
-                autoComplete="email"
-                disabled={loading || lockoutRemaining > 0}
-                placeholder="nama@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19] disabled:opacity-50"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <label className="font-bold text-[#1c1c19] text-xs">Kata Sandi</label>
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-[11px] text-[#8c6b4f] hover:text-[#6f3c16] font-medium"
-                >
-                  {showPassword ? 'Sembunyikan' : 'Lihat'}
-                </button>
+          {mfaStep ? (
+            /* 2FA TOTP Verification Step */
+            <form onSubmit={handleMfaSubmit} className="flex flex-col gap-4 text-xs sm:text-sm">
+              <div className="flex flex-col items-center text-center gap-1.5 pb-2">
+                <div className="w-12 h-12 rounded-2xl bg-[#ffdbc7]/50 text-[#6f3c16] flex items-center justify-center mb-1">
+                  <span className="material-symbols-outlined text-[26px]">security</span>
+                </div>
+                <h2 className="font-serif text-lg font-bold text-[#1c1c19]">
+                  Verifikasi Dua Langkah (2FA)
+                </h2>
+                <p className="text-xs text-[#52443b] leading-relaxed max-w-xs">
+                  Buka aplikasi authenticator Anda (Google Authenticator, Authy, dll.) dan masukkan 6 digit kode untuk akun Yopan Kayu.
+                </p>
               </div>
-              <div className="relative flex items-center">
+
+              <div className="flex flex-col gap-1.5">
+                <label className="font-bold text-[#1c1c19] text-xs text-center">Kode Keamanan 6-Digit</label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
                   required
-                  autoComplete="current-password"
+                  autoFocus
+                  disabled={mfaLoading || lockoutRemaining > 0}
+                  placeholder="000000"
+                  value={totpCode}
+                  onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ''))}
+                  className="w-full px-4 py-3 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-center font-mono text-xl sm:text-2xl tracking-[0.35em] focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19] disabled:opacity-50"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={mfaLoading || totpCode.trim().length !== 6 || lockoutRemaining > 0}
+                className="w-full py-3.5 bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] font-semibold rounded-xl shadow-md transition-all active:scale-98 disabled:opacity-50 text-xs sm:text-sm mt-1 flex items-center justify-center gap-2"
+              >
+                {mfaLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Memverifikasi Kode...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-[18px]">verified</span>
+                    <span>Verifikasi dan Masuk</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMfaStep(false);
+                  setTotpCode('');
+                  setErrorMsg('');
+                  resetTurnstile();
+                }}
+                className="text-xs text-[#8c6b4f] hover:text-[#6f3c16] font-medium text-center py-1 transition-colors"
+              >
+                Batalkan / Masuk dengan akun lain
+              </button>
+            </form>
+          ) : (
+            /* Email & Password + Turnstile Form */
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-xs sm:text-sm">
+              <div className="flex flex-col gap-1.5">
+                <label className="font-bold text-[#1c1c19] text-xs">Email Pengelola</label>
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
                   disabled={loading || lockoutRemaining > 0}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="nama@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19] disabled:opacity-50"
                 />
               </div>
-            </div>
 
-            {/* Cloudflare Turnstile Captcha Widget */}
-            <div className="flex justify-center my-1.5 min-h-[65px] items-center">
-              <div ref={turnstileContainerRef} className="flex justify-center"></div>
-            </div>
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="font-bold text-[#1c1c19] text-xs">Kata Sandi</label>
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-[11px] text-[#8c6b4f] hover:text-[#6f3c16] font-medium"
+                  >
+                    {showPassword ? 'Sembunyikan' : 'Lihat'}
+                  </button>
+                </div>
+                <div className="relative flex items-center">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    autoComplete="current-password"
+                    disabled={loading || lockoutRemaining > 0}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-[#faf7f2] border border-[#ede5d8] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#6f3c16]/30 text-[#1c1c19] disabled:opacity-50"
+                  />
+                </div>
+              </div>
 
-            <button
-              type="submit"
-              disabled={loading || lockoutRemaining > 0 || (Boolean(turnstileWidgetId.current) && !turnstileToken)}
-              className="w-full py-3.5 bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] font-semibold rounded-xl shadow-md transition-all active:scale-98 disabled:opacity-50 text-xs sm:text-sm mt-1 flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Memverifikasi...</span>
-                </>
-              ) : lockoutRemaining > 0 ? (
-                <span>Tunggu ({lockoutRemaining}s)</span>
-              ) : (
-                <>
-                  <span className="material-symbols-outlined text-[18px]">login</span>
-                  <span>Masuk ke Dashboard</span>
-                </>
-              )}
-            </button>
-          </form>
+              {/* Cloudflare Turnstile Captcha Widget */}
+              <div className="flex justify-center my-1.5 min-h-[65px] items-center">
+                <div ref={turnstileContainerRef} className="flex justify-center"></div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading || lockoutRemaining > 0 || (Boolean(turnstileWidgetId.current) && !turnstileToken)}
+                className="w-full py-3.5 bg-[#1c1c19] hover:bg-[#6f3c16] text-[#faf7f2] font-semibold rounded-xl shadow-md transition-all active:scale-98 disabled:opacity-50 text-xs sm:text-sm mt-1 flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Memverifikasi...</span>
+                  </>
+                ) : lockoutRemaining > 0 ? (
+                  <span>Tunggu ({lockoutRemaining}s)</span>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-[18px]">login</span>
+                    <span>Masuk ke Dashboard</span>
+                  </>
+                )}
+              </button>
+            </form>
+          )}
 
           {/* Secure indicator note */}
           <div className="pt-3 border-t border-[#ede5d8]/80 flex items-center justify-center gap-1.5 text-[11px] text-[#85746a]">
